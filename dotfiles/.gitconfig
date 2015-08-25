@@ -1,0 +1,24 @@
+[user]
+	name = timstacy
+	email = tim.stacy@tradingtechnologies.com
+[core]
+    editor = vim
+[color]
+    ui = true  # turn on colors
+[alias]
+	glog = log --graph --date-order --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	myglog = log --graph --date-order --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --author=\"YOUR NAME\"
+
+	st = status
+	co = checkout
+	br = branch
+	ds = difftool --dir-diff --staged
+	df = difftool # --dir-diff
+[diff]
+    tool = meld  # do all the diffs in meld
+[difftool]
+	prompt = false
+[mergetool]
+    prompt = false  # do not prompt to use meld
+[merge]
+    tool = meld  # make the meld the default merge tool

@@ -1,0 +1,104 @@
+
+##############################################################################################################
+###### CHEF NOTES
+##############################################################################################################
+
+[MANUAL CHEF BOOTSTRAPPING]
+target_node_ip="xxx.xxx.xxx.xxx";target_node_name=`ssh -oStrictHostKeyChecking=no root@$target_node_ip 'hostname'`;target_node_name=`echo $target_node_name|cut -d'.' -f 1`;target_node_name=${target_node_name,,};ttknife bootstrap -r base -N $target_node_name --ssh-user root -P Tt12345678 $target_node_ip -E <chef environment>
+
+
+[CHEF NODE REMOVAL]
+ttknife node delete <node name>
+ttknife client delete <node name>
+
+
+[STARTING SOON EMAIL]
+./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/deploy.py --send-starting-email --dev2stage --stage2prod
+
+
+[WATCHING AN S3 DOWNLOAD]
+command: watch -n 1 ls -lh rest-client{date}{otherstuff}
+
+
+[FIXING PERMISSIONS WITHOUT ROOT]
+for i in /opt/chef /etc/chef /var/chef ; do  sudo mkdir -pv $i ; sudo chmod -v g+sw $i ; sudo chown -v deploy:Debesys-SuperUsers $i ; done
+
+
+##############################################################################################################
+###### GIT NOTES
+##############################################################################################################
+
+[GIT STASHING]
+Show Stashes: > git stash list
+Stash Files: > git stash save [Option Message]
+Restore Stash: > git stash pop stash@\{NUMBER\}
+
+
+##############################################################################################################
+###### DEPLOYMENT NOTES
+##############################################################################################################
+
+[AUDIT THE ENVIRONMENTS]
+===================================================
+./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/audit_environment.py -e ext-prod
+./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/audit_environment.py -e ext-uat
+
+
+[VERIFY THE DEPLOYMENTS (TEST-RUN)
+===================================================
+./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py --knife-config ~/.chef/knife.external.rb --log-file ~/hotfix.log -a -e [affected environments] -q [search query] --test_run
+
+
+[RUN THE DEPLOYMENTS]
+===================================================
+./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py --send-summary-email --knife-config ~/.chef/knife.external.rb --log-file ~/hotfix.log -a -e [affected environments] -q [search query]
+
+
+
+##############################################################################################################
+###### MISC NOTES
+##############################################################################################################
+
+[FIXING PERMISSIONS WITHOUT ROOT]
+for i in /opt/chef /etc/chef /var/chef ; do  sudo mkdir -pv $i ; sudo chmod -v g+sw $i ; sudo chown -v deploy:Debesys-SuperUsers $i ; done
+
+
+[USEFUL COMMANDS FOR FINDING LARGE FILES]
+du -sh /var/log/debesys/* | sort -rh | head
+sudo find / -maxdepth 1 -type d | xargs sudo du -hs  ** then continue through directories as they are identifed
+
+[COMMAND TO FIND A DELETED FILE THAT IS STILL OPEN]
+sudo lsof -a -L1 /
+
+
+[DRO STATUS PAGE]
+http://<ip>:8456
+
+[SETTING UP A NEW REPO]
+git clone git@github.com:tradingtechnologies/debesys.git debesys_
+cd debesys_
+git submodule init
+git submodule update
+git checkout develop
+--> then manually copy over the commit hook
+
+
+[MOVING ALGOSERVER_EXEC FILES]
+cd /var/lib
+sudo tar cvf algoserver_exec.tar algoserver_exec
+sudo tar -zxvf algoserver_exec.tar
+
+
+[PURGING OLD GIT TAGS - SPEED UP GIT COMPLETION]
+git tag -d $(git tag); git fetch
+
+
+[RUN A LINUX PORT LISTENER]
+sudo tcpdump -i eth0 'port 443'
+
+
+[COMMAND LINE ILO RESET]
+sshpass -p Tt12345678 ssh -o StrictHostKeyChecking=no ttadmxxx100@10.192.8.x "power reset"
+
+
+
