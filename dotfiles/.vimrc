@@ -3,7 +3,8 @@ filetype off
 
 
 """"""""""""""""""""""""""""""""""""""""""
-"""""""" start plugins
+"         Vundle start plugins
+""""""""""""""""""""""""""""""""""""""""""
 " Set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -29,7 +30,7 @@ Plugin 'EasyMotion'
 Plugin 'flazz/vim-colorschemes'
 
 " File viewer
-Plugin 'scrooloose/nerdtree'
+" Plugin 'scrooloose/nerdtree'
 
 " Buffer Explorer
 Plugin 'jlanzarotta/bufexplorer'
@@ -50,7 +51,7 @@ Plugin 'tabman.vim'
 
 Plugin 'bling/vim-airline'
 
-Plugin 'airblade-vim-gitgutter'
+" Plugin 'airblade-vim-gitgutter'
 
 
 
@@ -77,22 +78,24 @@ set clipboard^=unamedplus                " Allow copy between terminals
 set pastetoggle=<F2>
 set listchars=tab:>\ ,trail:*,extends:#,nbsp:.  " Highlight problematic whitespaces
 
+
+" ----------------- Ctrl-P Config/AG Search -------------------
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
-" Remapping Arrow keys so I stop using them
+
+" ----------------- Arrow Key Remapping -------------------
+" ----------------- Forces me to not use -------------------
 inoremap <Left> <NOP>
 inoremap <Right> <NOP>
 inoremap <Up> <NOP>
 inoremap <Down> <NOP>
 
 
-" Leader Key Remappings
+" ----------------- Leader Key Remapping -------------------
 map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
-
-
 
 
 " ----------------- UI CHANGES -------------------
@@ -104,26 +107,59 @@ set cursorline                         " Highlight the line the cursor is on
 hi CursorLine cterm=NONE ctermbg=235    " Cursor line specifics
 
 
-" ----------------- Plugin Changes ---------------
-
-" NerdTree {
-    if isdirectory(expand("~/.vim/bundle/nerdtree"))
-        map <C-e> <plug>NERDTreeTabsToggle<CR>
-        map <leader>e :NERDTreeFind<CR>
-        nmap <leader>nt :NERDTreeFind<CR>
-
-        let NERDTreeShowBookmarks=1
-        let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
-        let NERDTreeChDirMode=0
-        let NERDTreeQuitOnOpen=1
-        let NERDTreeMouseMode=2
-        let NERDTreeShowHidden=1
-        let NERDTreeKeepTreeInNewTab=1
-        let g:nerdtree_tabs_open_on_gui_startup=0
-    endif
-    " }
+" ---------------- Airline Config -----------------
+let g:airline_theme="badwolf"
+let g:airline_detect_modified=1
+let g:airline_detect_paste=1
+let g:airline_section_b='%{getcwd()}'
+let g:airline_section_c='%t'
+let g:airline_section_y=0
 
 
+" ---------------- Syntastic Config -----------------
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_check_on_open=0
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_signs=1
+let g:syntastic_enable_highlighting=1
+
+
+" ---------------- NerdTree Config -----------------
+" " NerdTree {
+"     if isdirectory(expand("~/.vim/bundle/nerdtree"))
+"         map <C-e> <plug>NERDTreeTabsToggle<CR>
+"         map <leader>e :NERDTreeFind<CR>
+"         nmap <leader>nt :NERDTreeFind<CR>
+" 
+"         let NERDTreeShowBookmarks=1
+"         let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+"         let NERDTreeChDirMode=0
+"         let NERDTreeQuitOnOpen=1
+"         let NERDTreeMouseMode=2
+"         let NERDTreeShowHidden=1
+"         let NERDTreeKeepTreeInNewTab=1
+"         let g:nerdtree_tabs_open_on_gui_startup=0
+"     endif
+"     " }
+
+" Automatically Open NERDTree by default
+" autocmd VimEnter * NERDTree
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" NERDTree remapping of Ctrl-n to toggle NERDTree on/off
+" map <silent> <C-n> :NERDTreeToggle<CR>
+" map <silent> <C-n> :NERDTreeFocus<CR>
+
+" Auto Close NERDTree if its the only window open when closing VIM
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+
+" ---------------- Tabularize Config -----------------
 " Tabularize {
     if isdirectory(expand("~/.vim/bundle/tabular"))
         nmap <Leader>a& :Tabularize /&<CR>
@@ -144,6 +180,7 @@ hi CursorLine cterm=NONE ctermbg=235    " Cursor line specifics
 "}
 
 
+" ---------------- XTerm Stuff -----------------
 let &t_SI .= "\<Esc>[?2004h"
 let &t_EI .= "\<Esc>[?2004l"
 
@@ -154,9 +191,6 @@ function XTermPasteBegin()
     set paste
     return ""
 endfunction
-
-
-
 
 
 
