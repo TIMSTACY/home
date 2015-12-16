@@ -127,6 +127,10 @@ let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=1
 let g:syntastic_enable_highlighting=1
 
+if filereadable("/opt/chef/embedded/bin/ruby")
+    let g:syntastic_ruby_exec="/opt/chef/embedded/bin/ruby"
+endif
+
 
 " ---------------- NerdTree Config -----------------
 " " NerdTree {
