@@ -33,7 +33,8 @@ export PROMPT_COMMAND=set_branch
 # the terminal based on the cwd.
 
 
-export PS1="\[\033[1;36m\]\h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[0;0m\] \n>"
+export AWS_ACCOUNT_INFO=""
+export PS1="\[\033[1;36m\]\h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[1;34m\]\$AWS_ACCOUNT_INFO \[\033[0;0m\] \n>"
 #             \[\033[1;30m\] Start color brown.
 #                                        \[\033[0;0m\] Stop color.
 
@@ -61,6 +62,9 @@ export JOB_REQUESTER=tim.stacy@tradingtechnologies.com
 export MGR='Tim Stacy'
 export COST_CENTER='ENGINEERING-490'
 export PROJECT=DEBESYS
+export BUMP_COOKBOOK_VERSION_AUTO_EXECUTE=1
+
+
 
 
 # COMMAND ALIASES
@@ -88,6 +92,8 @@ alias st='sublime &'
 alias pspts='ps aux |grep pts |grep root'
 alias vimssh='vim ~/.ssh/config'
 alias vimtmux='vim ~/.tmux.conf'
+alias ee='emacs -nw'
+alias repohook='cp ~/githome/prepare-commit-msg .git/hooks/; chmod a+x .git/hooks/prepare-commit-msg'
 
 
 
@@ -110,15 +116,18 @@ alias xoff='external off'
 alias bcv='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook_version.py'
 alias chefbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py'
 alias reqbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py'
-alias show='ttknife node show'
-alias ke='ttknife node edit'
+# alias show='ttknife node show'
+# alias ke='ttknife node edit'
 alias tkw='tmux kill-window'
 alias tkp='tmux kill-pane'
 alias tsud='tmux split-window'
-alias tnw='tmux new-window'
-alias tks='tmux kill-server'
-alias testec2='./run python deploy/chef/scripts/ec2_instance.py -o -a --bootstrap -z us-east-1d --reason "Bootstrap Testing"'
-alias ec2='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py'
+alias tnw='tmux_new_window'
+alias tks='tmux kill-session -t'
+alias td='tmux_dev_vm_deploy'
+alias t='tmux_dev_vm_new'
+alias tka='tmux kill-server'
+alias testec2='./run python deploy/chef/scripts/ec2_instance.py -o -v'
+alias ec2='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py -o -v'
 alias reqdeploy='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_deploy.py'
 alias vcenter='./run python deploy/chef/scripts/vcenter_server.py'
 alias cbu='ttknife cookbook upload'
@@ -127,10 +136,11 @@ alias hotfixer='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/h
 alias deploy='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py'
 alias mergetest='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/check_repo.py'
 alias uploadtest='./run python deploy/chef/scripts/upload_debesys.py'
-alias mergemail='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat --uat2prod'
+alias mergemail_all='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat --uat2prod'
+alias mergemail_uat='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat'
 alias cleantags='git tag -d $(git tag); git fetch'
+alias conntester='./run python deploy/chef/scripts/connection_tester.py'
 
-alias cleantest='aws s3 rm s3://deploy-debesys/debesys-da2f175e853b212a08d0cc279163905a91010fac-all_oc_audit.tar.gz aws s3 rm s3://deploy-debesys/debesys-da2f175e853b212a08d0cc279163905a91010fac-all_oc_audit.md5 && aws s3 rm s3://deploy-debesys/ext-227a58a605567f1b38de7ed5bc5328d003db65fa.tar.gz && aws s3 rm s3://deploy-debesys/ext-227a58a605567f1b38de7ed5bc5328d003db65fa.md5'
 
 
 function aws_keys()
@@ -184,7 +194,7 @@ function external()
             export PS1=$PRE_EXTERNAL_PS1
         fi
         if [ $TMUX_PANE ]; then
-            rename_terminal_title "bash"
+            rename_terminal_title "DevVM"
         else
             if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
                 rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
@@ -201,17 +211,135 @@ function external()
 }
 
 
-function tns()
+
+
+#########################################################
+#### Shorcuts to do things in TMUX
+#########################################################
+
+
+function tmux_dev_vm_deploy()
 {
-    local hm=~
-    local config="-C $hm/.chef/knife.rb"
-    if [ "$EXTERNAL_DEBESYS" == "enabled" ]; then
-        config=" -C $hm/.chef/knife.external.rb"
-        echo external debesys
-    fi
-    echo "ttknife $config node show $1"
-    ttknife $config node show "$1"
+    echo "tmux new -d -s dev_vm -n deploy"
+    tmux new -d -s dev_vm -n deploy
+    tmux select-window -t dev_vm:1
+    tmux attach-session -t dev_vm
 }
+
+
+function tmux_dev_vm_new()
+{
+    if [ -z "$1" ]; then
+        winname="new"
+    else
+        winname="$1"
+    fi
+
+    echo "tmux new -d -s dev_vm -n $winname"
+    tmux new -d -s dev_vm -n "$winname"
+    tmux select-window -t dev_vm:1
+    tmux attach-session -t dev_vm
+}
+
+
+function tmux_new_window()
+{
+    if [ -z "$1" ]; then
+        winname="new"
+    else
+        winname="$1"
+    fi
+
+    echo "tmux new -d -s dev_vm -n $winname"
+    tmux new-window -n "$winname"
+}
+
+
+# function tmux_ec2()
+# {
+#     if [-z "$1" ]; then
+#         echo "Forgot to pass arguments."
+#         return
+#     fi
+# 
+#     echo "tmux new -s launching-ec2"
+#     tmux new -s "launching-ec2"
+#     echo "./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py -o -v $1"
+#     tmux send-keys "./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py -o -v $1"
+
+
+
+#############################################################
+#### Common Chef Tasks Turned into functions.
+#############################################################
+
+function setchefconfig()
+{
+    if [ -z "$1" ]; then
+        echo Invalid usage of setchefconfig, you must pass a hostname.
+        return
+    fi
+
+    # Default to Internal Chef Org
+    chef_config=~/.chef/knife.rb
+
+    # Note: double-brackets [[ ]] cause == to do wildcard matching and the behavior
+    # or == is different with single brackets [ ].
+    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    elif [[ $1 == *"ip-10-210-0"* || $1 == *"ip-10-210-2"* || $1 == *"ip-10-210-4"* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    elif [[ $1 == *"ip-10-213-0"* || $1 == *"ip-10-213-2"* || $1 == *"ip-10-213-4"* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    elif [[ $1 == *"ip-10-215-0"* || $1 == *"ip-10-215-2"* || $1 == *"ip-10-215-4"* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    fi
+}
+
+
+function knife_node_edit()
+{
+    setchefconfig "$1"
+    echo knife node edit "$1" --config $chef_config
+    knife node edit "$1" --config $chef_config
+}
+alias ke=knife_node_edit
+
+
+function knife_node_show()
+{
+    setchefconfig "$1"
+    echo knife node show "$1" --config $chef_config
+    knife node show "$1" --config $chef_config
+}
+alias show=knife_node_show
+
+
+function search_chef_environment()
+{
+    if [ -z "$1" ]; then
+        echo Usage: You must pass the Chef Environment and optionally a recipe.
+        echo Examples: sce int-dev-cert
+        echo           sce int-dev-cert cme
+        return
+    fi
+    local search="chef_environment:$1"
+
+    if [ ! -z "$2" ]; then
+        search=$search" AND recipe:$2*"
+    fi
+
+    # Default the Chef Org to Internal
+    chef_config=~/.chef/knife.rb
+
+    if [[ $1 == ext-* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    fi
+
+    echo knife search node $search --config $chef_config
+    knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags
+}
+alias sce=search_chef_environment
 
 
 function rmchefnode()
@@ -227,26 +355,6 @@ function rmchefnode()
     echo "ttknife client delete --yes $1"
     ttknife client delete --yes "$1"
 }
-
-
-function search_chef_environment()
-{
-    if [ -z "$1" ]; then
-        echo Usage: You must pass the Chef environment and optionally a recipe
-        echo "Examples: sce int-dev-cert (all nodes in int-dev-cert)"
-        echo "echo      sce int-dev-cert cme (all nodes in int-dev-cert with recipe cme)"
-        return
-    fi
-    local search="chef_environment:$1"
-
-    if [ ! -z "$2" ]; then
-        search=$search" AND recipe:$2*"
-    fi
-
-    echo ttknife search node $search
-    `git rev-parse --show-toplevel`/run `git rev-parse --show-toplevel` /ttknife search node "$search" -a name -a environment -a ip
-}
-alias sce=search_chef_environment
 
 
 function bootstrap__()
@@ -316,7 +424,7 @@ alias chefbootstrap=chefbootstrap__
 # safely remove a git branch
 function rmbr()
 {
-    for do_not_delete in master origin/master release/current origin/release/current develop origin/develop
+    for do_not_delete in master origin/master uat/current origin/uat/current release/current origin/release/current develop origin/develop
     do
         if [ $do_not_delete == "$1" ]; then
             echo "Ooops! I think you are accidently trying to delete one of the important branches, aborting."
@@ -422,55 +530,6 @@ function killit()
 }
 
 
-#function rename_terminal_title()
-#{
-#    if [ -z "$1" ]; then
-#        echo Usage: You must pass the new title.
-#        return
-#    fi
-#
-#    local title="terminal | $1"
-#    echo -en "\033]0;$title\007"
-#    export CURRENT_TERMINAL_TITLE="$1"
-#}
-#alias rw=rename_terminal_title
-#rename_terminal_title "Dev VM"
-
-
-function service_control_int()
-{
-    if [ -z "$1" ]; then
-        echo Usage: You must pass the environment and start or stop.
-        return
-    fi
-
-    echo knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.rb --ssh-user root --ssh-password Tt12345678 --attribute ipaddress
-    knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.rb --ssh-user root --ssh-password Tt12345678 --attribute ipaddress
-
-    
-    echo knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.rb --ssh-user root --identity-file /home/tstacy/.chef/PILAB-US-EAST-1.pem --attribute ipaddress
-    
-    knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.rb --ssh-user root --identity-file /home/tstacy/.chef/PILAB-US-EAST-1.pem --attribute ipaddress
-}
-
-
-function service_control_ext()
-{
-    if [ -z "$1" ]; then
-        echo Usage: External Must be ON. You must pass the environment and start or stop.
-        return
-    fi
-
-    echo knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.external.rb --ssh-user root --ssh-password Tt12345678 --attribute ipaddress
-    
-    knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.external.rb --ssh-user root --ssh-password Tt12345678 --attribute ipaddress
-
-
-    echo knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.external.rb --ssh-user root --identity-file /home/tstacy/.chef/TTNET-US-EAST-1.pem --attribute ipaddress
-    
-    knife ssh "chef_environment:$1" "/etc/debesys/services/action.sh $2" --config /home/tstacy/.chef/knife.external.rb --ssh-user root --identity-file /home/tstacy/.chef/TTNET-US-EAST-1.pem --attribute ipaddress
-}
-
 
 function make-completion-wrapper()
 {
@@ -545,8 +604,25 @@ function resetilo()
         return
     fi
     echo "sshpass -p Tt12345678 ssh -o StrictHostKeyChecking=no ttadmxxx100@$ilo_ip \"power reset\""
-    sshpass -p Tt12345678 ssh -o StrictHostKeyChecking=no ttadmxxx100@$ilo_ip \"power reset\"
+    sshpass -p Tt12345678 ssh -o StrictHostKeyChecking=no ttadmxxx100@$ilo_ip "power reset"
+    rename_terminal_title "Dev VM"
 }
+
+
+function awsauth() {
+    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --account $@)
+    AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
+    export AWS_ACCOUNT_INFO
+}
+
+
+function clearaws() {
+    export AWS_ACCOUNT=""
+    export AWS_ACCOUNT_INFO=""
+    source ~/amazon_keys.sh
+}
+
+
 
 
 alias gits='git-sync_'
