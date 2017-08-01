@@ -1,0 +1,7 @@
+##############################################################################################################
+###### DEPLOYMENT NOTES
+##############################################################################################################
+
+
+./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py --knife-config ~/.chef/knife.external.rb -a -r [REASON] -e [environments] -q [quoted query] | -c [cookbooks] --concurrency 50 --test-run
+

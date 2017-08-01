@@ -1,0 +1,7 @@
+# Transfer a cookbook between Internal and External Chef
+
+knife cookbook download <cb> <version> -d ~/one_off_cookbooks
+mv ~/one_off_cookbooks/<cb>-<version> ~/one_off_cookbooks/<cb>
+eknife cookbook upload <cb> -o ~/one_off_cookbooks
+
+

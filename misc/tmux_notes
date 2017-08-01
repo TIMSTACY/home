@@ -1,0 +1,7 @@
+%     vertical split
+"     horizontal split
+x     kill pane
+q     show pane numbers
+{    move current pane left
+}    move current pane right
+
