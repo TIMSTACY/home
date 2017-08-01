@@ -1,5 +1,7 @@
 set nocompatible
 filetype off
+" set ttyfast
+" set lazyredraw
 
 
 """"""""""""""""""""""""""""""""""""""""""
@@ -53,6 +55,8 @@ Plugin 'bling/vim-airline'
 
 " Plugin 'airblade-vim-gitgutter'
 
+Plugin 'chriskempson/base16-vim'
+
 
 
 " All of your plugins must be added before the following line
@@ -60,6 +64,8 @@ call vundle#end()    " required
 filetype plugin indent on    " required
 filetype plugin on
 
+" Turn off indenting for specific filetypes
+autocmd FileType erb setlocal indentexpr=
 
 set history=50
 set incsearch                           " Start searching as soon as you type
@@ -67,17 +73,17 @@ syntax on                               " Turn on syntax color
 set hlsearch                            " Highlight the word you are searching
 set mouse=a                             " Enable the use of the mouse in all modes
 set visualbell                          " Flash the screen instead of making a sound
-set number                              " Show line numbers
+" set number                              " Show line numbers
 set tabstop=4 shiftwidth=4 expandtab    " All tabs are spaces
 " set autoindent                          " Keeps the indent when you hit return
 set laststatus=2                        " Show airline all the time
 let mapleader = ","                     " Change leader key to ,
 set backspace=indent,eol,start          " Make sure backspace goes over lines
 set encoding=utf-8
-set clipboard^=unamedplus                " Allow copy between terminals
+set clipboard=unnamed                  " Allow copy between terminals
 set pastetoggle=<F2>
 set listchars=tab:>\ ,trail:*,extends:#,nbsp:.  " Highlight problematic whitespaces
-
+" set nocursorline
 
 " ----------------- Ctrl-P Config/AG Search -------------------
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -90,6 +96,10 @@ inoremap <Right> <NOP>
 inoremap <Up> <NOP>
 inoremap <Down> <NOP>
 
+" ----------- I use Ctrl-o for TMUX, and I always hit o -----
+" ------ in VIM and it shortcuts to the blank line.  I ------
+" ------ want to turn it off in VIM as a shortcut. ----------
+nmap o <NOP>
 
 " ----------------- Leader Key Remapping -------------------
 map <leader>ew :e %%
@@ -101,10 +111,15 @@ map <leader>et :tabe %%
 " ----------------- UI CHANGES -------------------
 " colorscheme Tomorrow-Night-Eighties     " Sets the colorscheme
 " colorscheme ingretu 
-colorscheme elflord 
-set t_Co=256                            " Turns on xterm colors so you set the color of the cursor line
-set cursorline                         " Highlight the line the cursor is on
-hi CursorLine cterm=NONE ctermbg=235    " Cursor line specifics
+" colorscheme elflord 
+if filereadable(expand("~/.vimrc_background"))
+    " let base16colorspace=256
+    source ~/.vimrc_background
+endif
+
+" set t_Co=256                            " Turns on xterm colors so you set the color of the cursor line
+" set cursorline                         " Highlight the line the cursor is on
+" hi CursorLine cterm=NONE ctermbg=235    " Cursor line specifics
 
 
 " ---------------- Airline Config -----------------
@@ -126,10 +141,11 @@ let g:syntastic_check_on_open=0
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=1
 let g:syntastic_enable_highlighting=1
+let g:syntastic_quiet_messages = { "level": "warnings" }
 
-if filereadable("/opt/chef/embedded/bin/ruby")
-    let g:syntastic_ruby_exec="/opt/chef/embedded/bin/ruby"
-endif
+" if filereadable("/opt/chef/embedded/bin/ruby")
+"     let g:syntastic_ruby_exec="/opt/chef/embedded/bin/ruby"
+" endif
 
 
 " ---------------- NerdTree Config -----------------

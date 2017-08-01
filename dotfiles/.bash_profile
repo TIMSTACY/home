@@ -11,6 +11,11 @@ PATH=$PATH:$HOME/bin
 
 export PATH
 
+# Enabling the use of git 1.9.4
+source /opt/rh/git19/enable
+
+
+
 function rename_terminal_title_no_prefix()
 {
     if [ -z "$1" ]; then
@@ -55,10 +60,14 @@ if [ ! $TMUX_PANE ]; then
 fi
 
 
-#    local title="terminal | $1"
-#    echo -en "\033]0;$title\007"
-#    export CURRENT_TERMINAL_TITLE="$1"
-#}
-# alias rw=rename_terminal_title
-# rename_terminal_title "Dev VM"
+echo DISPLAY is $DISPLAY.
+echo sudo netstat -tulpn |grep "127.0.0.0:60"
+sudo netstat -tulpn |grep "127.0.0.0:60"
+echo ps -ef |grep sshd | grep tstacy@
+ps -ef |grep sshd | grep tstacy@
+echo "Run killmyssh to kill all current sessions."
+
+
+
+
 

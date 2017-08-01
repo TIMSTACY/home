@@ -3,6 +3,9 @@
 	email = tim.stacy@tradingtechnologies.com
 [core]
     editor = vim
+    packedGitLimit = 512m
+    packedGitWindowSize = 512m
+    bigFileThreshold = 256m
 [color]
     ui = true  # turn on colors
 [alias]
@@ -22,3 +25,15 @@
     prompt = false  # do not prompt to use meld
 [merge]
     tool = meld  # make the meld the default merge tool
+[gc]
+    auto = 0
+[pack]
+    deltaCacheSize = 256m
+    windowMemory = 256m
+    threads = 4
+[git-tt]
+    validate-jira-number = true
+    include-jira-summary = true
+    jira-summary-length = 40
+    use-jira-as-prefix = true
+
