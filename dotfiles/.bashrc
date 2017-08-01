@@ -8,6 +8,8 @@ fi
 # User specific aliases and functions
 ulimit -c unlimited
 
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 # git completion and prompt scripts
 source ~/githome/git-prompt.sh
@@ -41,6 +43,7 @@ export PS1="\[\033[1;36m\]\h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[
 
 # History across terminal sessions.
 export HISTSIZE=10000
+export HISTCONTROL=ignorespace
 shopt -s histappend
 PROMPT_COMMAND="history -a;history -c;history -r;$PROMPT_COMMAND"
 export HISTTIMEFORMAT='%F %T '
@@ -50,11 +53,11 @@ export EDITOR='vim'
 export ALTERNATE_EDITOR=emacs
 export PATH=$PATH:/usr/bin/meld:/opt/chef/bin:/opt/chef/embedded/bin
 export INTAD_USER=tstacy
+export INTAD_SSH_KEY=~/.ssh/id_rsa
+export FEATURE_TEST_EMAIL=tim.stacy@tradingtechnologies.com
+export TT_EMAIL=tim.stacy@tradingtechnologies.com
 export VCD_ORG=Dev_General
-export JENKINS_USER=tim.stacy@tradingtechnologies.com
-if [ -f ~/.mykeys/jenkins_token ]; then
-    export JENKINS_TOKEN=$(head -n 1 ~/.mykeys/jenkins_token)
-fi
+export JENKINS_USER=tstacy
 export DEPLOYMENT_SCRIPTS_REPO_ROOT=~/dev-root/scripts
 export BOOTSTRAP_REQUESTER=tim.stacy@tradingtechnologies.com
 export JOB_REQUESTER=tim.stacy@tradingtechnologies.com
@@ -63,6 +66,21 @@ export MGR='Tim Stacy'
 export COST_CENTER='ENGINEERING-490'
 export PROJECT=DEBESYS
 export BUMP_COOKBOOK_VERSION_AUTO_EXECUTE=1
+export NODES_REPO_ROOT=~/dev-root/nodes
+# export NODES_REPO_ROOT=~/dev-root/node_test_1
+export MY_ONE_OFF_VERSION=0.1818.1818
+export MY_ONE_OFF_TAG="Testing deploy_one_off.py changes."
+export TEMP_VM_CPU=2
+export TEMP_VM_MEMORY=4
+export TEMP_VM_CHEF_ENV="int-dev-cert"
+export PRIVATE_CHEF_UPLOAD=1
+export GIT_MERGE_AUTOEDIT=no
+export ENABLE_POST_TO_SERVICENOW=1
+
+
+if [ -f ~/.mykeys/jenkins_token ]; then
+    export JENKINS_TOKEN=$(head -n 1 ~/.mykeys/jenkins_token)
+fi
 
 
 
@@ -74,18 +92,26 @@ alias cls='clear'
 alias ls='ls -aFCh --color=always'
 alias h='history | tail -n 500'
 alias hg='history |grep'
+alias vhist='vim ~/.bash_history'
 alias vimbash='vim ~/.bashrc'
 alias vbash='vim ~/.bashrc'
 alias vimbp='vim ~/.bash_profile'
 alias sbp='source ~/.bash_profile'
 alias sbash='source ~/.bashrc'
+alias stmux='tmux source-file ~/.tmux.conf'
 alias vimvim='vim ~/.vimrc'
 alias term='terminator -l tim --geometry 1500x900+100+30 &'
 alias vimterm='vim ~/.config/terminator/config'
 alias envs='echo PATH $PATH'
 alias vnotes='vim ~/notes'
 alias cnotes='cat ~/notes'
+alias cdeploy='cat ~/deploy_notes'
+alias cupgradechef='cat ~/chefupgrade_notes'
+alias cnewrepo='cat ~/newrepo_notes'
+alias cdisablechef='cat ~/disablechef_notes'
+alias cenablechef='cat ~/enablechef_notes'
 alias vknownhosts='vim ~/.ssh/known_hosts'
+alias ctmux='cat ~/tmux_notes'
 alias vkh='vim ~/.ssh/known_hosts'
 alias psme='ps aux |grep tstacy'
 alias st='sublime &'
@@ -94,7 +120,8 @@ alias vimssh='vim ~/.ssh/config'
 alias vimtmux='vim ~/.tmux.conf'
 alias ee='emacs -nw'
 alias repohook='cp ~/githome/prepare-commit-msg .git/hooks/; chmod a+x .git/hooks/prepare-commit-msg'
-
+alias lx='ls |xclip -i'
+alias ctransfercbs='cat ~/transfer_cookbooks_notes'
 
 
 # DEBESYS RELATED ALIAS
@@ -103,8 +130,17 @@ alias dev2='cd ~/dev-root/debesys_two'
 alias dev3='cd ~/dev-root/debesys_three'
 alias dev4='cd ~/dev-root/debesys_four'
 alias dev5='cd ~/dev-root/debesys_five'
+alias scripts='cd ~/dev-root/scripts'
+alias nodes='cd ~/dev-root/nodes'
+alias nodes2='cd ~/dev-root/nodes_two'
 alias se1='cd ~/dev-root/systemseng_one'
+alias ttnet='cd ~/dev-root/ttnet_one'
+alias ttnet2='cd ~/dev-root/ttnet_two'
 alias vcloud='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/vcloud_server.py'
+alias tempvm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/temp_vm.py'
+alias swarm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/swarm.py'
+alias changeenvironment='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/change_environment.py'
+alias addvlan='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_vlan.py'
 alias S3='aws s3 ls s3://deploy-debesys'
 alias mdbd='sudo mount -o user=intad/tstacy -t cifs //chifs01.int.tt.local/Share/Dead_By_Dawn /mnt/dbd/'
 alias glog='git glog'
@@ -113,10 +149,13 @@ alias run='`git rev-parse --show-toplevel`/run'
 alias ttknife='`git rev-parse --show-toplevel`/run `git rev-parse --show-toplevel`/ttknife'
 alias xon='external on'
 alias xoff='external off'
+alias pion='private-int on'
+alias pioff='private-int off'
 alias bcv='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook_version.py'
-alias chefbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py'
+alias chefbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py -o -v'
 alias reqbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py'
-# alias show='ttknife node show'
+alias kns='ttknife node show'
+alias show=node_show
 # alias ke='ttknife node edit'
 alias tkw='tmux kill-window'
 alias tkp='tmux kill-pane'
@@ -124,23 +163,67 @@ alias tsud='tmux split-window'
 alias tnw='tmux_new_window'
 alias tks='tmux kill-session -t'
 alias td='tmux_dev_vm_deploy'
-alias t='tmux_dev_vm_new'
+alias tnew='tmux_dev_vm_new'
 alias tka='tmux kill-server'
-alias testec2='./run python deploy/chef/scripts/ec2_instance.py -o -v'
-alias ec2='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py -o -v'
+alias ec2='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py -o -v --route53 --confirm-delete'
 alias reqdeploy='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_deploy.py'
 alias vcenter='./run python deploy/chef/scripts/vcenter_server.py'
 alias cbu='ttknife cookbook upload'
 alias sn='ttknife search node'
+alias esn='eknife search node'
 alias hotfixer='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/hotfixer.py'
 alias deploy='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py'
-alias mergetest='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/check_repo.py'
+alias mergetest='$DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/check_repo.py'
+alias checkrepo='$DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/check_repo.py'
 alias uploadtest='./run python deploy/chef/scripts/upload_debesys.py'
 alias mergemail_all='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat --uat2prod'
 alias mergemail_uat='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat'
 alias cleantags='git tag -d $(git tag); git fetch'
 alias conntester='./run python deploy/chef/scripts/connection_tester.py'
+alias etimdev='ttknife environment edit int-dev-tstacy'
+alias nutanix='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/nutanix_server.py -o '
+alias gpob='git push origin $b'
+alias reqcaptureup='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_captureup.py'
+alias killmyssh='ps -ef | grep sshd | grep tstacy@ | tr -s " " | cut -d" " -f 2 | xargs kill'
+alias stmux='tmux source-file ~/.tmux.conf'
+alias oneoff='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/deploy_one_off.py --skip-package-check'
+alias prod_decom='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_prod_decom.py'
+alias requestbuild='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_build.py'
+alias showtemps='ttknife search node "chef_environment:int-dev-sparepool AND creation_info_spare_temp_vm:true" -a cpu.total -a memory.total -a creation_info'
+alias vdr='__cat_newest_deployment_receipt'
+alias runme='__dot_slash_run_local_repo'
 
+
+
+function __dot_slash_run_local_repo()
+{
+    usage="runme script.py <options>"
+    if [ -z "$1" ]; then
+        echo $usage
+        return
+    fi
+
+    cur_repo=`pwd`
+    echo ./run python $cur_repo/deploy/chef/scripts/$*
+    ./run python $cur_repo/deploy/chef/scripts/$*
+}
+
+
+
+## function update-x11-forwarding
+## {
+##     if [ -z "$TMUX" ]; then
+##         echo $DISPLAY > ~/.display.save
+##     else
+##         export DISPLAY=`cat ~/.display.save`
+##     fi
+## }
+
+
+function __cat_newest_deployment_receipt()
+{
+    cat `ls -dlt ~/deployment_receipts/* |head -n 1 |awk '{print $9}' |more`
+}
 
 
 function aws_keys()
@@ -156,6 +239,84 @@ function aws_keys()
         source $1
     else
         echo Error: Didn\'t find "$1", couldn\'t load AWS keys.
+    fi
+}
+
+
+function spares__()
+{
+    usage='spares [host_prefix] (e.g., ar0srv)'
+    if [ -z "$1" ]; then
+        echo $usage
+        return
+    fi
+    echo knife search node "chef_environment:ext-prod-sparepool AND name:$1*" -a tags --config ~/.chef/knife.external.rb
+    knife search node "chef_environment:ext-prod-sparepool AND name:$1*" -a tags --config ~/.chef/knife.external.rb
+}
+alias showsparepool=spares__
+
+
+function find_spare()
+{
+    usage='findspare [chef_environment] [data_center_prefix] [cookbook]'
+    if [ -z "$1" ]; then
+        echo $usage
+        return
+    fi
+
+    if [ -z "$2" ]; then
+        echo $usage
+        return
+    fi
+
+    if [ -z "$3" ]; then
+        echo $usage
+        return
+    fi
+
+    echo knife exec ~/dev-root/scripts/deploy/chef/scripts/snacks/find_spare.rb "$1" "$2" "$3" --config ~/.chef/knife.external.rb
+    knife exec ~/dev-root/scripts/deploy/chef/scripts/snacks/find_spare.rb "$1" "$2" "$3" --config ~/.chef/knife.external.rb
+}
+alias findspare=find_spare
+
+
+function private-int()
+{
+    usage="private-int on|off"
+    if [ -z "$1" ]; then
+        echo $usage
+        return
+    fi
+
+    if [ "on" == "$1" ]; then
+        alias sn='pknife search node'
+        export PRE_EXTERNAL_PS1=$PS1
+        export PRE_EXTERNAL_TERMINAL_TITLE=$CURRENT_TERMINAL_TITLE
+        export PS1="\[\033[1;94m\]PRIVATE-INTERNAL-CHEF\[\033[1;36m\] \h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[0;0m\] \n>"
+        rename_terminal_title "PRIVATE-INT-CHEF"
+        blue='\e[1;94m' # red text for the external banner
+        nc='\e[0;0m'  # back to white
+        echo
+        echo -e "${blue}#################################################${nc}"
+        echo -e "${blue}##                                             ##${nc}"
+        echo -e "${blue}##           PRIVATE-INTERNAL-CHEF             ##${nc}"
+        echo -e "${blue}##                                             ##${nc}"
+        echo -e "${blue}#################################################${nc}"
+        echo
+    elif [ "off" == "$1" ]; then
+        alias sn='knife search node'
+        if [ ! -z "$PRE_EXTERNAL_PS1" ]; then
+            export PS1=$PRE_EXTERNAL_PS1
+        fi
+        if [ $TMUX_PANE ]; then
+            rename_terminal_title "DevVM"
+        else
+            if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
+                rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
+            fi
+        fi
+    else
+        echo $usage
     fi
 }
 
@@ -223,22 +384,22 @@ function tmux_dev_vm_deploy()
     echo "tmux new -d -s dev_vm -n deploy"
     tmux new -d -s dev_vm -n deploy
     tmux select-window -t dev_vm:1
-    tmux attach-session -t dev_vm
+    tmux attach-session -d -t dev_vm
 }
 
 
 function tmux_dev_vm_new()
 {
     if [ -z "$1" ]; then
-        winname="new"
+        session_name="dev2"
     else
-        winname="$1"
+        session_name="$1"
     fi
 
-    echo "tmux new -d -s dev_vm -n $winname"
-    tmux new -d -s dev_vm -n "$winname"
-    tmux select-window -t dev_vm:1
-    tmux attach-session -t dev_vm
+    echo "tmux new -d -s $session_name -n $session_name"
+    tmux new -d -s "$session_name" -n "$session_name"
+    tmux select-window -t "$session_name":1
+    tmux attach-session -d -t "$session_name"
 }
 
 
@@ -285,7 +446,7 @@ function setchefconfig()
 
     # Note: double-brackets [[ ]] cause == to do wildcard matching and the behavior
     # or == is different with single brackets [ ].
-    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* ]]; then
+    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* ]]; then
         chef_config=~/.chef/knife.external.rb
     elif [[ $1 == *"ip-10-210-0"* || $1 == *"ip-10-210-2"* || $1 == *"ip-10-210-4"* ]]; then
         chef_config=~/.chef/knife.external.rb
@@ -294,6 +455,31 @@ function setchefconfig()
     elif [[ $1 == *"ip-10-215-0"* || $1 == *"ip-10-215-2"* || $1 == *"ip-10-215-4"* ]]; then
         chef_config=~/.chef/knife.external.rb
     fi
+}
+
+
+function pknife()
+{
+    knife "$@" -c ~/.chef/knife.private-int.rb;
+}
+
+
+function eknife()
+{
+    knife "$@" -c ~/.chef/knife.external.rb;
+}
+
+
+function node_show()
+{
+    if [ -z "$1" ]; then
+        echo "You must provide a node name."
+        return
+    fi
+
+    setchefconfig $1
+    echo knife node show "$1" --config $chef_config
+    knife node show "$1" -a ipaddress -a chef_environment -a run_list -a tags -a creation_info --config $chef_config
 }
 
 
@@ -306,13 +492,18 @@ function knife_node_edit()
 alias ke=knife_node_edit
 
 
-function knife_node_show()
+function knife_node_search()
 {
+    if [ -z "$1" ]; then
+        echo "You must provide a node name."
+        return
+    fi
+
     setchefconfig "$1"
-    echo knife node show "$1" --config $chef_config
-    knife node show "$1" --config $chef_config
+    echo knife node show --config $chef_config "$1"
+    knife node show --config $chef_config "$1"
 }
-alias show=knife_node_show
+alias ns=knife_node_show
 
 
 function search_chef_environment()
@@ -424,7 +615,7 @@ alias chefbootstrap=chefbootstrap__
 # safely remove a git branch
 function rmbr()
 {
-    for do_not_delete in master origin/master uat/current origin/uat/current release/current origin/release/current develop origin/develop
+    for do_not_delete in master origin/master uat/current origin/uat/current release/current origin/release/current develop origin/develop git
     do
         if [ $do_not_delete == "$1" ]; then
             echo "Ooops! I think you are accidently trying to delete one of the important branches, aborting."
@@ -486,15 +677,8 @@ function git-sync_()
         echo "popd"; popd;
         return
     fi
-    echo "git submodule init";
-    git submodule init;
-    if [ $? != 0 ]; then
-        echo "Aborting."
-        echo "popd"; popd;
-        return
-    fi
-    echo "git submodule update";
-    git submodule update;
+    echo "git submodule update --init --recursive";
+    git submodule update --init --recursive;
     if [ $? != 0 ]; then
         echo "Aborting."
         echo "popd"; popd;
@@ -609,18 +793,107 @@ function resetilo()
 }
 
 
+function feature_test_assist__()
+{
+    usage="fta <action> <environment>"
+    if [ -z "$1" ]; then
+        echo $usage
+        return
+    fi
+
+    if [ -z "$2" ]; then
+        echo $usage
+        return
+    fi
+
+    echo $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/feature_test_assistant.py -a "$1" -e "$2"
+    $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/feature_test_assistant.py -a "$1" -e "$2"
+}
+alias fta=feature_test_assist__
+
+
+
 function awsauth() {
-    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --account $@)
+    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
 
+function awsauthadmin() {
+    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role admin --account $@)
+    AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
+    export AWS_ACCOUNT_INFO
+}
+
+function awsauthread() {
+    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role read --account $@)
+    AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
+    export AWS_ACCOUNT_INFO
+}
 
 function clearaws() {
     export AWS_ACCOUNT=""
     export AWS_ACCOUNT_INFO=""
-    source ~/amazon_keys.sh
+    rm /home/tstacy/.aws-keys*
+    # source ~/amazon_keys.sh
 }
+
+
+function gitclean()
+{
+    while :
+    do
+        output="$(git tag -d $(git tag | head -n 2000))"
+        echo $output
+        if [ -z "$output" ]
+        then
+            echo 'git tag cleanup finished.'
+            break
+        fi
+    done
+    git fetch
+    git gc
+}
+
+
+function sshadmc()
+{
+    ssh tstacy@"$1" -t "sudo /opt/debesys/edgeserver/run admc -u admin -h "$1" -p 9151"
+}
+
+
+function setintad()
+{
+    export INTAD_PASSWORD="$1"
+    clear
+}
+
+
+function nicesshoff()
+{
+    echo "mv /home/tstacy/.ssh/config /home/tstacy/.ssh/test"
+    mv /home/tstacy/.ssh/config /home/tstacy/.ssh/test
+}
+
+
+function nicesshon()
+{
+    echo "mv /home/tstacy/.ssh/test/config /home/tstacy/.ssh"
+    mv /home/tstacy/.ssh/test/config /home/tstacy/.ssh
+}
+
+
+
+function test_func()
+{
+    local testvar=$1
+    if [ $testvar != "release" ]; then
+        echo "testvar does not equal release: $testvar"
+    fi
+    echo "testvar: $testvar"
+}
+
+
 
 
 
