@@ -8,21 +8,9 @@ sudo vim /etc/sudoers.d/priv and remove !SHELL, !SU
 sudo rm /etc/chef/*
 knife bootstrap ipaddress --ssh-user root --identity-file ~/.ssh/<filename>.pem -N nodename
 
-[CHEF NODE REMOVAL]
-ttknife node delete <node name>
-ttknife client delete <node name>
-
-
-[STARTING SOON EMAIL]
-./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/deploy.py --send-starting-email --dev2stage --stage2prod
-
 
 [WATCHING AN S3 DOWNLOAD]
 command: watch -n 1 ls -lh rest-client{date}{otherstuff}
-
-
-[FIXING PERMISSIONS WITHOUT ROOT]
-for i in /opt/chef /etc/chef /var/chef ; do  sudo mkdir -pv $i ; sudo chmod -v g+sw $i ; sudo chown -v deploy:Debesys-SuperUsers $i ; done
 
 
 [EXTERNAL CHEF ACCESS - READ ONLY]
@@ -64,10 +52,10 @@ for i in /opt/chef /etc/chef /var/chef ; do  sudo mkdir -pv $i ; sudo chmod -v g
 du -sh /var/log/debesys/* | sort -rh | head
 sudo find / -maxdepth 1 -type d | xargs sudo du -hs  ** then continue through directories as they are identifed
 
+
 [COMMAND TO FIND A DELETED FILE THAT IS STILL OPEN]
 sudo lsof -a -L1 /
 
-ext-prod-broken ext-prod-md-sp ext-prod-cassandra ext-prod-mon ext-prod-cert ext-prod-other-cassandra ext-prod-delayed ext-prod-sim ext-prod-live ext-prod-spacewalk ext-prod-md-pp-convert ext-prod-sparepool ext-prod-md-pp-delayed ext-prod-srlabs-record ext-prod-md-pp
 
 [SETTING UP A NEW REPO]
 git clone git@github.com:tradingtechnologies/debesys.git debesys_
@@ -78,14 +66,11 @@ git checkout develop
 --> then manually copy over the commit hook
 cp prepare-commit-msg ~/dev-root/debesys/.git/hooks
 
+
 [MOVING ALGOSERVER_EXEC FILES]
 cd /var/lib
 sudo tar cvf algoserver_exec.tar algoserver_exec
 sudo tar -zxvf algoserver_exec.tar
-
-
-[PURGING OLD GIT TAGS - SPEED UP GIT COMPLETION]
-git tag -d $(git tag); git fetch
 
 
 [RUN A LINUX PORT LISTENER]
@@ -110,13 +95,6 @@ sudo service ntpd start
 http://x.x.x.x:8456
 
 
-[STOPPING LBM MONITOR]
-knife ssh "chef_environment:ext-prod-* AND data_center_name:ttnet-eu-west*" "sudo stop lbm_monitor" --config ~/.chef/knife.external.rb --ssh-user root --identity-file ~/.ssh/TTNET-EU-WEST-1.pem --attribute ipaddress
-
-knife ssh "chef_environment:ext-prod-* AND data_center_name:ttnet-us-east*" "sudo stop lbm_monitor" --config ~/.chef/knife.external.rb --ssh-user root --identity-file ~/.ssh/TTNET-US-EAST-1.pem --attribute ipaddress
-
-knife ssh "chef_environment:ext-prod-* AND (data_center_name:frankfurt OR data_center_name:aurora OR data_center_name:new_york OR data_center_name:chicago)" "sudo stop lbm_monitor" --config ~/.chef/knife.external.rb --ssh-user tstacy --identity-file ~/.ssh/id_rsa --attribute ipaddress
-
 [BOUNCE INTERFACE - REPLACE eth0 WITH PROPER IFACE]
 ifdown eth0 && sleep 10 && ifup eth0
 
@@ -130,19 +108,10 @@ dig +short myip.opendns.com @resolver1.opendns.com
 curl ifconfig.me
 
 
-
 [DOWNGRADE OPENSSL]
 sudo yum downgrade openssl
 sudo yum --nogpgcheck install openssl
 
-
-[UAT-ENVIRONMENT-LIST]
-no rbs: ext-uat-cassandra ext-uat-mon ext-uat-cert ext-uat-sim ext-uat-md-sp ext-uat-sparepool
-rbs: ext-uat-cassandra.rb ext-uat-mon.rb ext-uat-cert.rb ext-uat-sim.rb ext-uat-md-sp.rb ext-uat-sparepool.rb
-
-[PROD-ENVIRONMENT-LIST]
-no rbs: ext-prod-broken ext-prod-md-sp ext-prod-cassandra ext-prod-mon ext-prod-cert ext-prod-other-cassandra ext-prod-delayed ext-prod-sim ext-prod-live ext-prod-spacewalk ext-prod-md-pp-convert ext-prod-sparepool ext-prod-md-pp-delayed ext-prod-srlabs-record ext-prod-md-pp
-rbs: ext-prod-broken.rb ext-prod-md-sp.rb ext-prod-cassandra.rb ext-prod-mon.rb ext-prod-cert.rb ext-prod-other-cassandra.rb ext-prod-delayed.rb ext-prod-sim.rb ext-prod-live.rb ext-prod-spacewalk.rb ext-prod-md-pp-convert.rb ext-prod-sparepool.rb ext-prod-md-pp-delayed.rb ext-prod-srlabs-record.rb ext-prod-md-pp.rb
 
 [TTW Console]
 Command + Option + J (Mac) or Control+ Shift + J (Windows/Linux).
@@ -152,7 +121,6 @@ Command + Option + J (Mac) or Control+ Shift + J (Windows/Linux).
 git reset HEAD~ --hard
 git pull
 re-do the merge
-
 
 
 ##### GETTING THE PRE-WATERFALL VERSION #####
@@ -166,28 +134,23 @@ username: ttadmin
 password: H4Pr0xy
 
 
-
 ### SEARCHING FOR SRL ClIENT VERSION
 knife ssh "chef_environment:ext-prod-live AND recipe:ase" "tac /var/log/debesys/md_client_*.log* | grep -m 1 Version" -a ipaddress --config ~/.chef/knife.external.rb
-
-
-### CHEF 12 UPGRADE
-sudo rm -f /etc/chef/ohai_plugins/lldp.rb
-sudo yum -y install https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chef-12.4.1-1.el6.x86_64.rpm
-
-
-### CHEF 12 DOWNGRADE
-sudo rm -f /etc/chef/ohai_plugins/lldp.rb
-sudo yum -y downgrade https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chef-11.8.2-1.el6.x86_64.rpm
 
 
 #### FINDING HUNG SSH SESSION ####
 sudo netstat -ap | grep :<port-number> or <ip-destination>
 
 
-
 #### TEMPVM --LIST SORT BY CREATOR
 tempvm --list all | tr -s " " |awk '{print $4,$1,$2,$3}' |sort
+
+
+
+#### IN MOTD the ^[ is an Escape Character
+# here is how you type it.
+CTRL + v + [
+
 
 
 
