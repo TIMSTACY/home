@@ -66,6 +66,7 @@ export MGR='Tim Stacy'
 export COST_CENTER='ENGINEERING-490'
 export PROJECT=DEBESYS
 export BUMP_COOKBOOK_VERSION_AUTO_EXECUTE=1
+export BUMP_COOKBOOK_VERSION_NO_KNIFE_CHECK=1
 export NODES_REPO_ROOT=~/dev-root/nodes
 # export NODES_REPO_ROOT=~/dev-root/node_test_1
 export MY_ONE_OFF_VERSION=0.1818.1818
@@ -76,6 +77,7 @@ export TEMP_VM_CHEF_ENV="int-dev-cert"
 export PRIVATE_CHEF_UPLOAD=1
 export GIT_MERGE_AUTOEDIT=no
 export ENABLE_POST_TO_SERVICENOW=1
+export POWERDOWN_SUPPRESS_NEXT_STEPS=1
 
 
 if [ -f ~/.mykeys/jenkins_token ]; then
@@ -195,6 +197,39 @@ alias runme='__dot_slash_run_local_repo'
 
 
 
+=======
+alias fakechef='__fakechef'
+alias realchef='__realchef'
+alias pcu='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/server/utils/private_chef_user.py'
+alias addcb='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/add_environment_version_constraints.py'
+alias vlogs='vim /var/log/debesys'
+alias upload-dev-envs='__upload_int_dev_environments'
+
+
+
+function __fakechef()
+{
+    __fake_chef_console_on
+    cp -v ~/.chef/knife.training.rb.orig ~/.chef/knife.rb
+    cp -v ~/.chef/knife.training.rb.orig ~/.chef/knife.external.rb
+    export BUMP_COOKBOOK_VERSION_NO_NOTES=1
+    echo BUMP_COOKBOOK_VERSION_NO_NOTES has been set.
+    echo
+}
+
+
+function __realchef()
+{
+    __fake_chef_console_off
+    cp -v ~/.chef/knife.rb.orig ~/.chef/knife.rb
+    cp -v ~/.chef/knife.external.rb.orig ~/.chef/knife.external.rb
+    export BUMP_COOKBOOK_VERSION_NO_NOTES
+    echo BUMP_COOKBOOK_VERSION_NO_NOTES has been unset.
+    echo
+}
+
+
+>>>>>>> fb23aa639bbabdc85825b5793301a75da2bd670b
 function __dot_slash_run_local_repo()
 {
     usage="runme script.py <options>"
@@ -209,6 +244,20 @@ function __dot_slash_run_local_repo()
 }
 
 
+## function update-x11-forwarding
+## {
+##     if [ -z "$TMUX" ]; then
+##         echo $DISPLAY > ~/.display.save
+##     else
+##         export DISPLAY=`cat ~/.display.save`
+##     fi
+## }
+
+
+function __cat_newest_deployment_receipt()
+{
+    cat `ls -dlt ~/deployment_receipts/* |head -n 1 |awk '{print $9}' |more`
+}
 
 ## function update-x11-forwarding
 ## {
@@ -317,6 +366,36 @@ function private-int()
         fi
     else
         echo $usage
+function __fake_chef_console_on()
+{
+    export PRE_EXTERNAL_PS1=$PS1
+    export PRE_EXTERNAL_TERMINAL_TITLE=$CURRENT_TERMINAL_TITLE
+    export PS1="\[\033[1;94m\]FAKE-CHEF-BCV-TESTING\[\033[1;36m\] \h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[0;0m\] \n>"
+    rename_terminal_title "FAKE-CHEF"
+    blue='\e[1;94m' # red text for the external banner
+    nc='\e[0;0m'  # back to white
+    echo
+    echo -e "${blue}#################################################${nc}"
+    echo -e "${blue}##                                             ##${nc}"
+    echo -e "${blue}##                  FAKE-CHEF                  ##${nc}"
+    echo -e "${blue}##         BUMP_COOKBOOK_TESTING_MODE          ##${nc}"
+    echo -e "${blue}##                                             ##${nc}"
+    echo -e "${blue}#################################################${nc}"
+    echo
+}
+
+function __fake_chef_console_off()
+{
+    if [ ! -z "$PRE_EXTERNAL_PS1" ]; then
+        export PS1=$PRE_EXTERNAL_PS1
+    fi
+    if [ $TMUX_PANE ]; then
+        rename_terminal_title "DevVM"
+    else
+        if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
+            rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
+        fi
+>>>>>>> fb23aa639bbabdc85825b5793301a75da2bd670b
     fi
 }
 
@@ -548,65 +627,65 @@ function rmchefnode()
 }
 
 
-function bootstrap__()
-{
-    local found_dash_a=false
-    # Example of bash substring match
-    if [[ "$@" == *"-a"* ]]; then
-        found_dash_a=true
-    fi
+## function bootstrap__()
+## {
+##     local found_dash_a=false
+##     # Example of bash substring match
+##     if [[ "$@" == *"-a"* ]]; then
+##         found_dash_a=true
+##     fi
+## 
+##     local found_dash_h=false
+##     if [[ "$@" == *"-h"* ]]; then
+##         found_dash_h=true
+##     fi
+## 
+##     if [ $found_dash_h == false -a $found_dash_a == false ]; then
+##         local title_start="bootstrapping..."
+##         local window=`tmux list-windows |grep "\(active\)" | cut -d" " -f 1 | sed s'/://g'`
+##         rename_terminal_title "$title_start"
+##     fi
+## 
+##     echo $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py "$@"
+##     $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py "$@"
+## 
+##     if [ $found_dash_h == false -a $found_dash_a == false ]; then
+##         local title_done="bootstrapping...done"
+##         rename_terminal_title "$title_done" "$window"
+##     fi
+## }
+## alias bootstrap=bootstrap__
 
-    local found_dash_h=false
-    if [[ "$@" == *"-h"* ]]; then
-        found_dash_h=true
-    fi
-
-    if [ $found_dash_h == false -a $found_dash_a == false ]; then
-        local title_start="bootstrapping..."
-        local window=`tmux list-windows |grep "\(active\)" | cut -d" " -f 1 | sed s'/://g'`
-        rename_terminal_title "$title_start"
-    fi
-
-    echo $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py "$@"
-    $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py "$@"
-
-    if [ $found_dash_h == false -a $found_dash_a == false ]; then
-        local title_done="bootstrapping...done"
-        rename_terminal_title "$title_done" "$window"
-    fi
-}
-alias bootstrap=bootstrap__
 
 
-
-function chefbootstrap__()
-{
-    local found_dash_a=false
-    # Example of bash substring match
-    if [[ "$@" == *"-a"* ]]; then
-        found_dash_a=true
-    fi
-
-    local found_dash_h=false
-    if [[ "$@" == *"-h"* ]]; then
-        found_dash_h=true
-    fi
-
-    if [ $found_dash_h == false -a $found_dash_a == false ]; then
-        local title_start="bootstrapping..."
-        local window=`tmux list-windows |grep "\(active\)" | cut -d" " -f 1 | sed s'/://g'`
-        rename_terminal_title "$title_start"
-    fi
-
-    echo $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py "$@"
-    $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py "$@"
-
-    if [ $found_dash_h == false -a $found_dash_a == false ]; then
-        local title_done="bootstrapping...done"
-        rename_terminal_title "$title_done" "$window"
-    fi
-}
-alias chefbootstrap=chefbootstrap__
+## function chefbootstrap__()
+## {
+##     local found_dash_a=false
+##     # Example of bash substring match
+##     if [[ "$@" == *"-a"* ]]; then
+##         found_dash_a=true
+##     fi
+## 
+##     local found_dash_h=false
+##     if [[ "$@" == *"-h"* ]]; then
+##         found_dash_h=true
+##     fi
+## 
+##     if [ $found_dash_h == false -a $found_dash_a == false ]; then
+##         local title_start="bootstrapping..."
+##         local window=`tmux list-windows |grep "\(active\)" | cut -d" " -f 1 | sed s'/://g'`
+##         rename_terminal_title "$title_start"
+##     fi
+## 
+##     echo $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py "$@"
+##     $DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py "$@"
+## 
+##     if [ $found_dash_h == false -a $found_dash_a == false ]; then
+##         local title_done="bootstrapping...done"
+##         rename_terminal_title "$title_done" "$window"
+##     fi
+## }
+## alias chefbootstrap=chefbootstrap__
 
 
 
@@ -825,6 +904,12 @@ function awsauthadmin() {
     export AWS_ACCOUNT_INFO
 }
 
+function awsauthadmin() {
+    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role admin --account $@)
+    AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
+    export AWS_ACCOUNT_INFO
+}
+
 function awsauthread() {
     $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role read --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
@@ -895,6 +980,11 @@ function test_func()
 
 
 
+
+function __upload_int_dev_environments()
+{
+    ttknife environment from file int-dev-algo-backtest.rb int-dev-ft-cassandra.rb int-dev-other-cassandra.rb int-dev-broken.rb int-dev-jenkins.rb int-dev-perf-ar.rb int-dev-cassandra.rb int-dev-md-pp-convert.rb int-dev-perf-ar-vm.rb int-dev-cert.rb int-dev-md-pp-delayed.rb int-dev-perf.rb int-dev-cert-srao.rb int-dev-md-pp.rb int-dev-perf-sc.rb int-dev-coreinfra.rb int-dev-md-sp.rb int-dev-sim.rb int-dev-delayed.rb int-dev-mon.rb int-dev-sparepool.rb
+}
 
 
 
