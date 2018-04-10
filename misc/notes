@@ -29,6 +29,22 @@ ldapsearch -D "uid=ldapquery,ou=Service Accounts,ou=Users,ou=CHI,ou=US,dc=int,dc
 
 
 
+[EXTERNAL CHEF ACCESS - READ ONLY]
+eknife user invite add username
+
+
+[EXTERNAL CHEF ACCESS - WRITE ONLY]
+eknife group add user username superusers
+
+
+
+##############################################################################################################
+###### TESTING LDAP 
+##############################################################################################################
+ldapsearch -D "uid=ldapquery,ou=Service Accounts,ou=Users,ou=CHI,ou=US,dc=int,dc=tt,dc=local" -w "ldapsearch" -b "dc=int,dc=tt,dc=local" cn="aws-poc-locals3" | grep ntUserParms
+
+
+
 ##############################################################################################################
 ###### GIT NOTES
 ##############################################################################################################
@@ -95,6 +111,13 @@ sudo service ntpd start
 http://x.x.x.x:8456
 
 
+[STOPPING LBM MONITOR]
+knife ssh "chef_environment:ext-prod-* AND data_center_name:ttnet-eu-west*" "sudo stop lbm_monitor" --config ~/.chef/knife.external.rb --ssh-user root --identity-file ~/.ssh/TTNET-EU-WEST-1.pem --attribute ipaddress
+
+knife ssh "chef_environment:ext-prod-* AND data_center_name:ttnet-us-east*" "sudo stop lbm_monitor" --config ~/.chef/knife.external.rb --ssh-user root --identity-file ~/.ssh/TTNET-US-EAST-1.pem --attribute ipaddress
+
+knife ssh "chef_environment:ext-prod-* AND (data_center_name:frankfurt OR data_center_name:aurora OR data_center_name:new_york OR data_center_name:chicago)" "sudo stop lbm_monitor" --config ~/.chef/knife.external.rb --ssh-user tstacy --identity-file ~/.ssh/id_rsa --attribute ipaddress
+
 [BOUNCE INTERFACE - REPLACE eth0 WITH PROPER IFACE]
 ifdown eth0 && sleep 10 && ifup eth0
 
@@ -138,6 +161,16 @@ password: H4Pr0xy
 knife ssh "chef_environment:ext-prod-live AND recipe:ase" "tac /var/log/debesys/md_client_*.log* | grep -m 1 Version" -a ipaddress --config ~/.chef/knife.external.rb
 
 
+### CHEF 12 UPGRADE
+sudo rm -f /etc/chef/ohai_plugins/lldp.rb
+sudo yum -y install https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chef-12.4.1-1.el6.x86_64.rpm
+
+
+### CHEF 12 DOWNGRADE
+sudo rm -f /etc/chef/ohai_plugins/lldp.rb
+sudo yum -y downgrade https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chef-11.8.2-1.el6.x86_64.rpm
+
+
 #### FINDING HUNG SSH SESSION ####
 sudo netstat -ap | grep :<port-number> or <ip-destination>
 
@@ -150,9 +183,6 @@ tempvm --list all | tr -s " " |awk '{print $4,$1,$2,$3}' |sort
 #### IN MOTD the ^[ is an Escape Character
 # here is how you type it.
 CTRL + v + [
-
-
-
 
 
 

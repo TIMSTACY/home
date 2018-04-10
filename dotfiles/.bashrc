@@ -194,6 +194,10 @@ alias requestbuild='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scrip
 alias showtemps='ttknife search node "chef_environment:int-dev-sparepool AND creation_info_spare_temp_vm:true" -a cpu.total -a memory.total -a creation_info'
 alias vdr='__cat_newest_deployment_receipt'
 alias runme='__dot_slash_run_local_repo'
+
+
+
+=======
 alias fakechef='__fakechef'
 alias realchef='__realchef'
 alias pcu='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/server/utils/private_chef_user.py'
@@ -225,6 +229,7 @@ function __realchef()
 }
 
 
+>>>>>>> fb23aa639bbabdc85825b5793301a75da2bd670b
 function __dot_slash_run_local_repo()
 {
     usage="runme script.py <options>"
@@ -239,6 +244,20 @@ function __dot_slash_run_local_repo()
 }
 
 
+## function update-x11-forwarding
+## {
+##     if [ -z "$TMUX" ]; then
+##         echo $DISPLAY > ~/.display.save
+##     else
+##         export DISPLAY=`cat ~/.display.save`
+##     fi
+## }
+
+
+function __cat_newest_deployment_receipt()
+{
+    cat `ls -dlt ~/deployment_receipts/* |head -n 1 |awk '{print $9}' |more`
+}
 
 ## function update-x11-forwarding
 ## {
@@ -310,6 +329,43 @@ function find_spare()
 alias findspare=find_spare
 
 
+function private-int()
+{
+    usage="private-int on|off"
+    if [ -z "$1" ]; then
+        echo $usage
+        return
+    fi
+
+    if [ "on" == "$1" ]; then
+        alias sn='pknife search node'
+        export PRE_EXTERNAL_PS1=$PS1
+        export PRE_EXTERNAL_TERMINAL_TITLE=$CURRENT_TERMINAL_TITLE
+        export PS1="\[\033[1;94m\]PRIVATE-INTERNAL-CHEF\[\033[1;36m\] \h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[0;0m\] \n>"
+        rename_terminal_title "PRIVATE-INT-CHEF"
+        blue='\e[1;94m' # red text for the external banner
+        nc='\e[0;0m'  # back to white
+        echo
+        echo -e "${blue}#################################################${nc}"
+        echo -e "${blue}##                                             ##${nc}"
+        echo -e "${blue}##           PRIVATE-INTERNAL-CHEF             ##${nc}"
+        echo -e "${blue}##                                             ##${nc}"
+        echo -e "${blue}#################################################${nc}"
+        echo
+    elif [ "off" == "$1" ]; then
+        alias sn='knife search node'
+        if [ ! -z "$PRE_EXTERNAL_PS1" ]; then
+            export PS1=$PRE_EXTERNAL_PS1
+        fi
+        if [ $TMUX_PANE ]; then
+            rename_terminal_title "DevVM"
+        else
+            if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
+                rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
+            fi
+        fi
+    else
+        echo $usage
 function __fake_chef_console_on()
 {
     export PRE_EXTERNAL_PS1=$PS1
@@ -339,6 +395,7 @@ function __fake_chef_console_off()
         if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
             rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
         fi
+>>>>>>> fb23aa639bbabdc85825b5793301a75da2bd670b
     fi
 }
 
@@ -837,6 +894,12 @@ alias fta=feature_test_assist__
 
 function awsauth() {
     $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
+    AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
+    export AWS_ACCOUNT_INFO
+}
+
+function awsauthadmin() {
+    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role admin --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
