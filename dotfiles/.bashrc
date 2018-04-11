@@ -591,7 +591,7 @@ function search_chef_environment()
     fi
 
     echo knife search node $search --config $chef_config
-    knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags
+    knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags -a platform_version
 }
 alias sce=search_chef_environment
 
