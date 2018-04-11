@@ -107,6 +107,8 @@ alias vimterm='vim ~/.config/terminator/config'
 alias envs='echo PATH $PATH'
 alias vnotes='vim ~/notes'
 alias cnotes='cat ~/notes'
+alias yumnotes='cat ~/yum_notes'
+alias cmercury='cat ~/mercury_notes'
 alias cdeploy='cat ~/deploy_notes'
 alias cupgradechef='cat ~/chefupgrade_notes'
 alias cnewrepo='cat ~/newrepo_notes'
@@ -138,7 +140,7 @@ alias nodes2='cd ~/dev-root/nodes_two'
 alias se1='cd ~/dev-root/systemseng_one'
 alias ttnet='cd ~/dev-root/ttnet_one'
 alias ttnet2='cd ~/dev-root/ttnet_two'
-alias vcloud='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/vcloud_server.py'
+alias edgeproxy='cd ~/dev-root/EdgeProxy'
 alias tempvm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/temp_vm.py'
 alias swarm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/swarm.py'
 alias changeenvironment='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/change_environment.py'
@@ -153,7 +155,8 @@ alias xon='external on'
 alias xoff='external off'
 alias pion='private-int on'
 alias pioff='private-int off'
-alias bcv='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook_version.py'
+alias bcv='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook.py'
+alias bc='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook.py'
 alias chefbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py -o -v'
 alias reqbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py'
 alias kns='ttknife node show'
@@ -175,35 +178,62 @@ alias sn='ttknife search node'
 alias esn='eknife search node'
 alias hotfixer='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/hotfixer.py'
 alias deploy='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py'
-alias mergetest='$DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/check_repo.py'
-alias checkrepo='$DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/check_repo.py'
 alias uploadtest='./run python deploy/chef/scripts/upload_debesys.py'
-alias mergemail_all='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat --uat2prod'
-alias mergemail_uat='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/send_merge_email.py --send-starting-email --dev2stage --stage2uat'
 alias cleantags='git tag -d $(git tag); git fetch'
 alias conntester='./run python deploy/chef/scripts/connection_tester.py'
 alias etimdev='ttknife environment edit int-dev-tstacy'
 alias nutanix='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/nutanix_server.py -o '
-alias gpob='git push origin $b'
-alias reqcaptureup='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_captureup.py'
 alias killmyssh='ps -ef | grep sshd | grep tstacy@ | tr -s " " | cut -d" " -f 2 | xargs kill'
 alias stmux='tmux source-file ~/.tmux.conf'
 alias oneoff='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/deploy_one_off.py --skip-package-check'
 alias prod_decom='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_prod_decom.py'
 alias requestbuild='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_build.py'
-alias showtemps='ttknife search node "chef_environment:int-dev-sparepool AND creation_info_spare_temp_vm:true" -a cpu.total -a memory.total -a creation_info'
+alias showalltemps='ttknife search node "chef_environment:int-dev-sparepool AND creation_info_spare_temp_vm:true" -a cpu.total -a memory.total -a creation_info'
 alias vdr='__cat_newest_deployment_receipt'
 alias runme='__dot_slash_run_local_repo'
-
-
-
-=======
 alias fakechef='__fakechef'
 alias realchef='__realchef'
 alias pcu='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/server/utils/private_chef_user.py'
 alias addcb='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/add_environment_version_constraints.py'
 alias vlogs='vim /var/log/debesys'
 alias upload-dev-envs='__upload_int_dev_environments'
+alias vc='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/view_changes.py'
+alias powerdown_servers='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/powerdown_servers.py'
+
+alias nutanix_cpu='knife ssh "(chef_environment:int-dev* OR chef_environment:int-stage* OR chef_environment:int-sqe*) AND (NOT chef_environment:int-dev-jenkins) (NOT chef_environment:*perf*) AND name:*vm* AND (NOT creation_info_machine_origin:temp_hive)" "uptime" -a ipaddress --concurrency 20 | grep -v "load average: 0."'
+
+alias setrcv='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_rc_version.rb'
+alias esetrcv='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_rc_version.rb'
+
+alias svfb='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_version_from_branch.rb'
+alias esvfb='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_version_from_branch.rb'
+
+alias rlv='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/runlist_version.rb'
+alias erlv='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/runlist_version.rb'
+alias addrl='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_runlist.rb'
+alias eaddrl='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_runlist.rb'
+
+
+function __show_my_tempvms()
+{
+    ./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/temp_vm.py --list |grep gl |awk '{print $1}' |xargs -I {} knife node show {} -a chef_environment -a run_list -a tags -a ipaddress -a platform_version;
+}
+alias showtemps=__show_my_tempvms
+
+
+
+function __download_edgeproxy_package()
+{
+    if [ -z "$1" ]; then
+        echo epd edgeproxy-x.x.tar
+        return
+    fi
+
+    echo "aws s3 ls s3://deploy-debesys/$1 ~/edgeproxy_packages/"
+    aws s3 ls s3://deploy-debesys/$1 ~/edgeproxy_packages/
+}
+alias epd=__download_edgeproxy_package
+
 
 
 
@@ -229,7 +259,6 @@ function __realchef()
 }
 
 
->>>>>>> fb23aa639bbabdc85825b5793301a75da2bd670b
 function __dot_slash_run_local_repo()
 {
     usage="runme script.py <options>"
@@ -244,20 +273,6 @@ function __dot_slash_run_local_repo()
 }
 
 
-## function update-x11-forwarding
-## {
-##     if [ -z "$TMUX" ]; then
-##         echo $DISPLAY > ~/.display.save
-##     else
-##         export DISPLAY=`cat ~/.display.save`
-##     fi
-## }
-
-
-function __cat_newest_deployment_receipt()
-{
-    cat `ls -dlt ~/deployment_receipts/* |head -n 1 |awk '{print $9}' |more`
-}
 
 ## function update-x11-forwarding
 ## {
@@ -329,43 +344,6 @@ function find_spare()
 alias findspare=find_spare
 
 
-function private-int()
-{
-    usage="private-int on|off"
-    if [ -z "$1" ]; then
-        echo $usage
-        return
-    fi
-
-    if [ "on" == "$1" ]; then
-        alias sn='pknife search node'
-        export PRE_EXTERNAL_PS1=$PS1
-        export PRE_EXTERNAL_TERMINAL_TITLE=$CURRENT_TERMINAL_TITLE
-        export PS1="\[\033[1;94m\]PRIVATE-INTERNAL-CHEF\[\033[1;36m\] \h\[\033[1;33m\]\$(__git_ps1) \[\033[1;35m\]\w \[\033[0;0m\] \n>"
-        rename_terminal_title "PRIVATE-INT-CHEF"
-        blue='\e[1;94m' # red text for the external banner
-        nc='\e[0;0m'  # back to white
-        echo
-        echo -e "${blue}#################################################${nc}"
-        echo -e "${blue}##                                             ##${nc}"
-        echo -e "${blue}##           PRIVATE-INTERNAL-CHEF             ##${nc}"
-        echo -e "${blue}##                                             ##${nc}"
-        echo -e "${blue}#################################################${nc}"
-        echo
-    elif [ "off" == "$1" ]; then
-        alias sn='knife search node'
-        if [ ! -z "$PRE_EXTERNAL_PS1" ]; then
-            export PS1=$PRE_EXTERNAL_PS1
-        fi
-        if [ $TMUX_PANE ]; then
-            rename_terminal_title "DevVM"
-        else
-            if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
-                rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
-            fi
-        fi
-    else
-        echo $usage
 function __fake_chef_console_on()
 {
     export PRE_EXTERNAL_PS1=$PS1
@@ -395,7 +373,6 @@ function __fake_chef_console_off()
         if [ ! -z "PRE_EXTERNAL_TERMINAL_TITLE" ]; then
             rename_terminal_title "$PRE_EXTERNAL_TERMINAL_TITLE"
         fi
->>>>>>> fb23aa639bbabdc85825b5793301a75da2bd670b
     fi
 }
 
@@ -525,7 +502,7 @@ function setchefconfig()
 
     # Note: double-brackets [[ ]] cause == to do wildcard matching and the behavior
     # or == is different with single brackets [ ].
-    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* ]]; then
+    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* || $1 == ty* ]]; then
         chef_config=~/.chef/knife.external.rb
     elif [[ $1 == *"ip-10-210-0"* || $1 == *"ip-10-210-2"* || $1 == *"ip-10-210-4"* ]]; then
         chef_config=~/.chef/knife.external.rb
@@ -558,7 +535,7 @@ function node_show()
 
     setchefconfig $1
     echo knife node show "$1" --config $chef_config
-    knife node show "$1" -a ipaddress -a chef_environment -a run_list -a tags -a creation_info --config $chef_config
+    knife node show "$1" -a ipaddress -a chef_environment -a run_list -a tags -a creation_info -a platform_version --config $chef_config
 }
 
 
@@ -584,6 +561,13 @@ function knife_node_search()
 }
 alias ns=knife_node_show
 
+function __show__cookbook__version()
+{
+    rm /tmp/cbv > /dev/null 2>&1;
+    git show origin/$1:deploy/chef/cookbooks/$2/metadata.rb > /tmp/cbv;
+    grep version /tmp/cbv
+}
+alias cbv="__show__cookbook__version"
 
 function search_chef_environment()
 {
@@ -610,6 +594,30 @@ function search_chef_environment()
     knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags
 }
 alias sce=search_chef_environment
+
+
+function search_chef_env_and_show_deployed_cb_info()
+{
+    if [ -z "$1" ]; then
+        echo Usage: You must pass the Chef Environment and a cookbook.
+        echo Example: scesdc int-dev-cert cme
+        return
+    fi
+    local search="chef_environment:$1 AND deployed_cookbooks:$2"
+    local attrs="-a chef_environment -a run_list -a ipaddress -a deployed_cookbooks.$2"
+
+    # Default to Internal
+    chef_config=~/.chef/knife.rb
+
+    if [[ $1 == ext-* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    fi
+
+    echo knife search node $search $attr --config $chef_config
+    knife search node "$search" --config $chef_config $attrs
+}
+alias scesdc=search_chef_env_and_show_deployed_cb_info
+
 
 
 function rmchefnode()
@@ -894,12 +902,6 @@ alias fta=feature_test_assist__
 
 function awsauth() {
     $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
-    AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
-    export AWS_ACCOUNT_INFO
-}
-
-function awsauthadmin() {
-    $($DEPLOYMENT_SCRIPTS_REPO_ROOT/run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role admin --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
