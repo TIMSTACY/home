@@ -19,6 +19,9 @@ source ~/githome/git-completion.sh
      source ~/amazon_keys.sh
  fi
 
+ if [ -f ~/tstacy_github_token.sh ]; then
+     source ~/tstacy_github_token.sh
+ fi
 
 function set_branch()
 {
@@ -54,6 +57,7 @@ export ALTERNATE_EDITOR=emacs
 export PATH=$PATH:/usr/bin/meld:/opt/chef/bin:/opt/chef/embedded/bin
 export INTAD_USER=tstacy
 export INTAD_SSH_KEY=~/.ssh/id_rsa
+## export INTAD_SSH_KEY=~/.ssh/tstacy_rsa_withpphrase
 export FEATURE_TEST_EMAIL=tim.stacy@tradingtechnologies.com
 export TT_EMAIL=tim.stacy@tradingtechnologies.com
 export VCD_ORG=Dev_General
@@ -107,6 +111,7 @@ alias vimterm='vim ~/.config/terminator/config'
 alias envs='echo PATH $PATH'
 alias vnotes='vim ~/notes'
 alias cnotes='cat ~/notes'
+alias crebasenodes='cat ~/rebase_notes'
 alias yumnotes='cat ~/yum_notes'
 alias cmercury='cat ~/mercury_notes'
 alias cdeploy='cat ~/deploy_notes'
@@ -142,6 +147,7 @@ alias ttnet='cd ~/dev-root/ttnet_one'
 alias ttnet2='cd ~/dev-root/ttnet_two'
 alias edgeproxy='cd ~/dev-root/EdgeProxy'
 alias tempvm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/temp_vm.py'
+alias tailtempvm='tail -f -n 20 /var/log/debesys/temp_vm.log'
 alias swarm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/swarm.py'
 alias changeenvironment='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/change_environment.py'
 alias addvlan='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_vlan.py'
@@ -157,6 +163,7 @@ alias pion='private-int on'
 alias pioff='private-int off'
 alias bcv='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook.py'
 alias bc='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bump_cookbook.py'
+alias ue='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/update_environment.py -v --skip-confirm'
 alias chefbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/chef_bootstrap.py -o -v'
 alias reqbootstrap='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/request_bootstrap.py'
 alias kns='ttknife node show'
@@ -199,11 +206,9 @@ alias vlogs='vim /var/log/debesys'
 alias upload-dev-envs='__upload_int_dev_environments'
 alias vc='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/view_changes.py'
 alias powerdown_servers='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/powerdown_servers.py'
+alias disablechef='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/disable_chef.py'
 
 alias nutanix_cpu='knife ssh "(chef_environment:int-dev* OR chef_environment:int-stage* OR chef_environment:int-sqe*) AND (NOT chef_environment:int-dev-jenkins) (NOT chef_environment:*perf*) AND name:*vm* AND (NOT creation_info_machine_origin:temp_hive)" "uptime" -a ipaddress --concurrency 20 | grep -v "load average: 0."'
-
-alias setrcv='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_rc_version.rb'
-alias esetrcv='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_rc_version.rb'
 
 alias svfb='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_version_from_branch.rb'
 alias esvfb='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/set_version_from_branch.rb'
@@ -212,6 +217,18 @@ alias rlv='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/r
 alias erlv='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/runlist_version.rb'
 alias addrl='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_runlist.rb'
 alias eaddrl='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_runlist.rb'
+alias addtag='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_tag.rb'
+alias eaddtag='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_tag.rb'
+alias addattribute='knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb'
+alias eaddattribute='eknife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb'
+
+
+# Shared bash functions
+if [ -f $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bashrc/chef.bash ]; then
+    source $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bashrc/chef.bash
+fi
+
+
 
 
 function __show_my_tempvms()
@@ -242,6 +259,7 @@ function __fakechef()
     __fake_chef_console_on
     cp -v ~/.chef/knife.training.rb.orig ~/.chef/knife.rb
     cp -v ~/.chef/knife.training.rb.orig ~/.chef/knife.external.rb
+    cp -v ~/.chef/knife.training.rb.orig ~/.chef/knife.ttsdk.rb
     export BUMP_COOKBOOK_VERSION_NO_NOTES=1
     echo BUMP_COOKBOOK_VERSION_NO_NOTES has been set.
     echo
@@ -253,6 +271,7 @@ function __realchef()
     __fake_chef_console_off
     cp -v ~/.chef/knife.rb.orig ~/.chef/knife.rb
     cp -v ~/.chef/knife.external.rb.orig ~/.chef/knife.external.rb
+    cp -v ~/.chef/knife.ttsdk.rb.orig ~/.chef/knife.ttsdk.rb
     export BUMP_COOKBOOK_VERSION_NO_NOTES
     echo BUMP_COOKBOOK_VERSION_NO_NOTES has been unset.
     echo
@@ -525,6 +544,15 @@ function eknife()
     knife "$@" -c ~/.chef/knife.external.rb;
 }
 
+function kssh()
+{
+    knife ssh "$@" -a ipaddress -c ~/.chef/knife.rb;
+}
+
+function ekssh()
+{
+    knife ssh "$@" -a ipaddress -c ~/.chef/knife.external.rb;
+}
 
 function node_show()
 {
@@ -618,6 +646,28 @@ function search_chef_env_and_show_deployed_cb_info()
 }
 alias scesdc=search_chef_env_and_show_deployed_cb_info
 
+function knife_environment_show_cb_version()
+{
+    if [ -z "$1" ]; then
+        echo Usage: You must provide a Chef Environment
+        echo Example: envshow int-dev-cert base
+        return
+    fi
+    if [ -z "$2" ]; then
+        echo Usage: You must provide a cookbook
+        echo Example: envshow int-dev-cert base
+        return
+    fi
+
+    chef_config=~/.chef/knife.rb
+    if [[ $1 == ext-* ]]; then
+        chef_config=~/.chef/knife.external.rb
+    fi
+
+    echo knife environment show $1 --config $chef_config | grep $2
+    knife environment show "$1" --config "$chef_config" | grep "$2"
+}
+alias envshow=knife_environment_show_cb_version
 
 
 function rmchefnode()
