@@ -39,3 +39,5 @@
     delete-branch = never
 
 
+[push]
+	default = nothing
