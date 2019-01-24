@@ -85,9 +85,9 @@ export POWERDOWN_SUPPRESS_NEXT_STEPS=1
 export KNIFE_SSH_ENABLE_INTERNAL_POOL=1
 export JENKINS_BOT_SSH_KEY=~/.ssh/jenkins_bot_ldap_rsa
 
-export DAILY_BUILD_NOW_TARGET="prodfs"
+# export DAILY_BUILD_NOW_TARGET="prodfs"
 export DAILY_BUILD_NOW_BRANCH="master"
-export DAILY_BUILD_NOW_ENVIRONMENTS='int-dev-cert, int-dev-sim'
+# export DAILY_BUILD_NOW_ENVIRONMENTS='int-dev-cert, int-dev-sim'
 
 
 if [ -f ~/.mykeys/jenkins_token ]; then
@@ -95,7 +95,8 @@ if [ -f ~/.mykeys/jenkins_token ]; then
 fi
 
 
-
+# TEMPORARY ALIASES FOR NOTES, ETC.
+alias whichmock='show m-ar0srv46'
 
 # COMMAND ALIASES
 alias cdhome='cd ~/'
@@ -145,6 +146,7 @@ alias dev2='cd ~/dev-root/debesys_two'
 alias dev3='cd ~/dev-root/debesys_three'
 alias dev4='cd ~/dev-root/debesys_four'
 alias dev5='cd ~/dev-root/debesys_five'
+alias dep1='cd ~/dev-root/__deploy'
 alias scripts='cd ~/dev-root/scripts'
 alias nodes='cd ~/dev-root/nodes'
 alias nodes2='cd ~/dev-root/nodes_two'
@@ -221,6 +223,8 @@ alias ssh2='ssh_by_hostname'
 alias changeenvironment='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/change_environment.py'
 alias disablechef='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/disable_chef.py'
 alias swarm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/swarm.py'
+
+alias t3='/opt/virtualenv/triage/bin/t3'
 
 # Shared bash functions
 if [ -f $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bashrc/chef.bash ]; then
@@ -541,13 +545,9 @@ function setchefconfig()
 
     # Note: double-brackets [[ ]] cause == to do wildcard matching and the behavior
     # or == is different with single brackets [ ].
-    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* || $1 == ty* ]]; then
+    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* || $1 == ty* || $1 == sp* ]]; then
         chef_config=~/.chef/knife.external.rb
-    elif [[ $1 == *"ip-10-210-0"* || $1 == *"ip-10-210-2"* || $1 == *"ip-10-210-4"* ]]; then
-        chef_config=~/.chef/knife.external.rb
-    elif [[ $1 == *"ip-10-213-0"* || $1 == *"ip-10-213-2"* || $1 == *"ip-10-213-4"* ]]; then
-        chef_config=~/.chef/knife.external.rb
-    elif [[ $1 == *"ip-10-215-0"* || $1 == *"ip-10-215-2"* || $1 == *"ip-10-215-4"* ]]; then
+    elif [[ $1 == *"ip-10-210"* || $1 == *"ip-10-213"* || $1 == *"ip-10-215"* ]]; then
         chef_config=~/.chef/knife.external.rb
     fi
 }
@@ -567,6 +567,11 @@ function eknife()
 function kssh()
 {
     knife ssh "$@" -a ipaddress -c ~/.chef/knife.rb;
+}
+
+function ttsdkknife()
+{
+    knife "$@" -c ~/.chef/knife.ttsdk.rb;
 }
 
 function ekssh()
@@ -735,6 +740,30 @@ function knife_search_show_nodesize()
     knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags -a cpu.total -a memory.total -a platform_version
 }
 alias scesns=knife_search_show_nodesize
+
+
+function private_edge()
+{
+    if [ -z "$1" ]; then
+        echo "Usage: private_edge [on|off] node"
+        return
+    fi
+    if [ -z "$2" ]; then
+        echo "Usage: private_edge [on|off] node"
+        return
+    fi
+
+    if [ "on" == "$1" ]; then
+        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add haproxy.skip_haproxy _true_ 2> /dev/null
+        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add haproxy.weight 0 2> /dev/null
+        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add edgeserver.disable_smoke_test _true_ 2> /dev/null
+    fi
+
+    if [ "off" == "$1" ]; then
+        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" remove haproxy 2> /dev/null
+        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" remove edgeserver 2> /dev/null
+    fi
+}
 
 
 function rmchefnode()
