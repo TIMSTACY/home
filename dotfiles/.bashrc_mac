@@ -104,6 +104,8 @@ alias sshlvm='ssh -p 2222 tstacy@127.0.0.1'
 
 
 # COMMAND ALIASES
+alias ll='ls -l -G'
+alias ls='ls -G'
 alias cdhome='cd ~/'
 alias homerepo='cd ~/home_repo'
 alias cls='clear'
