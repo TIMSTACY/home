@@ -95,21 +95,14 @@ if [ -f ~/.mykeys/jenkins_token ]; then
 fi
 
 
-## Debesys Dev Workstation:: gld2vm65  (root/Tt12345678)
-alias sshdev='ssh tstacy@10.195.2.65'
-alias s='ssh -X tstacy@10.195.2.65'
-alias sshdevx='ssh -X tstacy@10.195.2.65'
-alias showdev='echo gla1vm65=10.195.2.65'
-alias sshlvm='ssh -p 2222 tstacy@127.0.0.1'
-
+# TEMPORARY ALIASES FOR NOTES, ETC.
+alias whichmock='show m-ar0srv46'
 
 # COMMAND ALIASES
-alias ll='ls -l -G'
-alias ls='ls -G'
 alias cdhome='cd ~/'
 alias homerepo='cd ~/home_repo'
 alias cls='clear'
-#alias ls='ls -aFCh --color=always'
+alias ls='ls -aFCh --color=always'
 alias h='history | tail -n 500'
 alias hg='history |grep'
 alias vhist='vim ~/.bash_history'
@@ -148,7 +141,7 @@ alias ctransfercbs='cat ~/transfer_cookbooks_notes'
 
 
 # DEBESYS RELATED ALIAS
-alias dev='cd ~/dev-root/debesys_one'
+alias dev='cd ~/dev-root/debesys'
 alias dev2='cd ~/dev-root/debesys_two'
 alias dev3='cd ~/dev-root/debesys_three'
 alias dev4='cd ~/dev-root/debesys_four'
