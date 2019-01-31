@@ -84,6 +84,7 @@ export ENABLE_POST_TO_SERVICENOW=1
 export POWERDOWN_SUPPRESS_NEXT_STEPS=1
 export KNIFE_SSH_ENABLE_INTERNAL_POOL=1
 export JENKINS_BOT_SSH_KEY=~/.ssh/jenkins_bot_ldap_rsa
+export DEVWS_SKIP_VALIDATE_REQUIREMENTS=1
 
 # export DAILY_BUILD_NOW_TARGET="prodfs"
 export DAILY_BUILD_NOW_BRANCH="master"
@@ -220,9 +221,9 @@ alias ssh2='ssh_by_hostname'
 ## alias tempvm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/temp_vm.py'
 ## alias ec2='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/ec2_instance.py -o -v --route53 --confirm-delete'
 ## alias oneoff='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/deploy_one_off.py --skip-package-check'
-alias changeenvironment='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/change_environment.py'
-alias disablechef='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/disable_chef.py'
-alias swarm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/swarm.py'
+## alias changeenvironment='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/change_environment.py'
+## alias disablechef='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/disable_chef.py'
+## alias swarm='./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/swarm.py'
 
 alias t3='/opt/virtualenv/triage/bin/t3'
 
@@ -252,6 +253,9 @@ alias rollback=devws_rollback
 alias tempvm=devws_tempvm
 alias ec2="devws_ec2_instance -o -v"
 alias oneoff="devws_deploy_one_off --skip-package-check"
+alias changeenvironment=devws_change_environment
+alias swarm=devws_swarm
+alias disablechef=devws_disable_chef
 
 
 
