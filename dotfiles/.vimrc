@@ -143,6 +143,15 @@ let g:syntastic_enable_signs=1
 let g:syntastic_enable_highlighting=1
 let g:syntastic_quiet_messages = { "level": "warnings" }
 
+augroup filetype
+  autocmd! BufRead,BufNewFile *.py.erb set filetype=python
+augroup END
+
+" --------------- Remove trailing whitespace -------------
+:autocmd BufWritePre *.py %s/\s\+$//e
+:autocmd BufWritePre *.rb %s/\s\+$//e
+
+
 " if filereadable("/opt/chef/embedded/bin/ruby")
 "     let g:syntastic_ruby_exec="/opt/chef/embedded/bin/ruby"
 " endif
