@@ -86,6 +86,7 @@ export POWERDOWN_SUPPRESS_NEXT_STEPS=1
 export KNIFE_SSH_ENABLE_INTERNAL_POOL=1
 export JENKINS_BOT_SSH_KEY=~/.ssh/jenkins_bot_ldap_rsa
 export DEVWS_SKIP_VALIDATE_REQUIREMENTS=1
+export USE_PYTHON3=1
 
 
 # ENABLE TO SKIP DCs in KNIFE_SSH.PY
@@ -120,6 +121,7 @@ alias vimvim='vim ~/.vimrc'
 alias envs='echo PATH $PATH'
 alias vnotes='vim ~/notes'
 alias cnotes='cat ~/notes'
+alias snotes='cat ~/splunk_notes'
 alias cchef14='cat ~/chef14_notes'
 alias crebasenodes='cat ~/rebase_notes'
 alias cedgeurl='cat ~/cedgeurl'
@@ -249,7 +251,7 @@ function setintad()
 
 function __show_my_tempvms()
 {
-    run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/temp_vm.py --list |grep gl |awk '{print $1}' |xargs -I {} knife node show {} -a chef_environment -a run_list -a tags -a ipaddress -a platform_version;
+    knife search node "chef_environment:int-* AND creation_info_creator:tstacy AND creation_info_machine_origin:santorini" -a chef_enviornment -a run_list -a tags -a ipaddress -a platform_version
 }
 alias showtemps=__show_my_tempvms
 
@@ -541,6 +543,7 @@ function ttsdkknife()
 {
     knife "$@" -c ~/.chef/knife.ttsdk.rb;
 }
+alias tknife=ttsdkknife
 
 function ekssh()
 {
@@ -556,7 +559,7 @@ function node_show()
 
     setchefconfig $1
     echo knife node show "$1" --config $chef_config
-    knife node show "$1" -a ipaddress -a chef_environment -a run_list -a tags -a creation_info -a platform_version --config $chef_config
+    knife node show "$1" -a ipaddress -a chef_environment -a environment -a run_list -a tags -a creation_info -a platform_version -a dmi.system.product_name -a base.tor_info --config $chef_config
 }
 
 function nodesize()
@@ -567,7 +570,7 @@ function nodesize()
     fi
 
     setchefconfig $1
-    knife node show "$1" -a ipaddress -a chef_environment -a run_list -a tags -a memory.total -a cpu.total -a platform_version --config $chef_config
+    knife node show "$1" -a ipaddress -a chef_environment -a environment -a run_list -a tags -a memory.total -a cpu.total -a platform_version --config $chef_config
 }
 
 function keff()
@@ -635,7 +638,7 @@ function search_chef_environment()
     fi
 
     echo knife search node $search --config $chef_config
-    knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags -a platform_version
+    knife search node "$search" --config $chef_config -a name -a chef_environment -a environment -a ipaddress -a run_list -a tags -a platform_version
 }
 alias sce=search_chef_environment
 
@@ -676,9 +679,25 @@ function search_chef_environment_and_datacenter()
     fi
 
     echo knife search node $search --config $chef_config
-    knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags -a platform_version
+    knife search node "$search" --config $chef_config -a name -a chef_environment -a environment -a ipaddress -a run_list -a tags -a platform_version
 }
 alias scedc=search_chef_environment_and_datacenter
+
+
+function multitail_with_search_internal()
+{
+    if [ -z "$1" ]; then
+        echo Usage: You must pass the Chef Search and logfile.
+        echo Example: 'chef_environment:int-dev-coreinfra AND data_center_name:glados-a AND recipe:squid_proxy' /var/log/squid/access.log
+        echo ""
+        return
+    fi
+    local search="$1"
+    local logfile="$2"
+
+    cmd=$(echo; echo -n "multitail "; knife search node "$search" -a ipaddress 2>/dev/null | grep ipaddress | cut -d":" -f2 | xargs -I '{}' -n 1 -i sh -c 'echo -l \"ssh $1 sudo tail -f /var/log/squid/access.log\"' - {} | tr "\n" " "; echo); eval $cmd
+}
+alias mtail=multitail_with_search_internal
 
 
 function show_dcs_in_chef_environment()
@@ -730,7 +749,7 @@ function search_chef_env_and_show_deployed_cb_info()
         return
     fi
     local search="chef_environment:$1 AND deployed_cookbooks:$2"
-    local attrs="-a chef_environment -a run_list -a ipaddress -a deployed_cookbooks.$2"
+    local attrs="-a chef_environment -a environment -a run_list -a ipaddress -a deployed_cookbooks.$2"
 
     # Default to Internal
     chef_config=~/.chef/knife.rb
@@ -833,7 +852,7 @@ function knife_search_show_nodesize()
     fi
 
     echo knife search node $search --config $chef_config
-    knife search node "$search" --config $chef_config -a name -a chef_environment -a ipaddress -a run_list -a tags -a cpu.total -a memory.total -a platform_version
+    knife search node "$search" --config $chef_config -a name -a chef_environment -a environment -a ipaddress -a run_list -a tags -a cpu.total -a memory.total -a platform_version
 }
 alias scesns=knife_search_show_nodesize
 
@@ -851,7 +870,7 @@ function private_edge()
 
     if [ "on" == "$1" ]; then
         knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add haproxy.skip_haproxy _true_ 2> /dev/null
-        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add haproxy.weight 0 2> /dev/null
+        knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add haproxy.weight _0_ 2> /dev/null
         knife exec $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/snacks/add_attribute.rb "name:$2" add edgeserver.disable_smoke_test _true_ 2> /dev/null
     fi
 
@@ -1025,7 +1044,7 @@ function resetilo()
     local oct2=$(echo $ip |cut -d. -f2)
     local oct3=$(echo $ip |cut -d. -f3)
     local oct4=$(echo $ip |cut -d. -f4)
-    local ilo_ip="10.192.8.$oct4"
+    local ilo_ip="10.$oct2.8.$oct4"
     
     if [ $oct2 != 192 ]; then
        echo "resetilo function only works for Glados servers."
@@ -1042,19 +1061,19 @@ function resetilo()
 
 
 function awsauth() {
-    $(run $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
+    $(/opt/virtualenv/devws/bin/python2 $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
 
 function awsauthadmin() {
-    $(run $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role admin --account $@)
+    $(/opt/virtualenv/devws/bin/python2 $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role admin --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
 
 function awsauthread() {
-    $(run $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role read --account $@)
+    $(/opt/virtualenv/devws/bin/python2 $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role read --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
