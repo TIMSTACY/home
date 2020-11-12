@@ -87,6 +87,7 @@ export KNIFE_SSH_ENABLE_INTERNAL_POOL=1
 export JENKINS_BOT_SSH_KEY=~/.ssh/jenkins_bot_ldap_rsa
 export DEVWS_SKIP_VALIDATE_REQUIREMENTS=1
 export USE_PYTHON3=1
+export PYTHONWARNINGS="ignore::DeprecationWarning"
 
 
 # ENABLE TO SKIP DCs in KNIFE_SSH.PY
@@ -166,9 +167,6 @@ alias tailtempvm='tail -f -n 20 /var/log/debesys/temp_vm.log'
 alias S3='aws s3 ls s3://deploy-debesys'
 alias mdbd='sudo mount -o user=intad/tstacy -t cifs //chifs01.int.tt.local/Share/Dead_By_Dawn /mnt/dbd/'
 alias glog='git glog'
-alias kns='knife node show'
-alias ekns='eknife node show'
-alias show=node_show
 alias tkw='tmux kill-window'
 alias tkp='tmux kill-pane'
 alias tsud='tmux split-window'
@@ -550,18 +548,6 @@ function ekssh()
     knife ssh "$@" -a ipaddress -c ~/.chef/knife.external.rb;
 }
 
-function node_show()
-{
-    if [ -z "$1" ]; then
-        echo "You must provide a node name."
-        return
-    fi
-
-    setchefconfig $1
-    echo knife node show "$1" --config $chef_config
-    knife node show "$1" -a ipaddress -a chef_environment -a environment -a run_list -a tags -a creation_info -a platform_version -a dmi.system.product_name -a base.tor_info --config $chef_config
-}
-
 function nodesize()
 {
     if [ -z "$1" ]; then
@@ -570,7 +556,7 @@ function nodesize()
     fi
 
     setchefconfig $1
-    knife node show "$1" -a ipaddress -a chef_environment -a environment -a run_list -a tags -a memory.total -a cpu.total -a platform_version --config $chef_config
+    knife search node "n:$1" -a ipaddress -a chef_environment -a environment -a run_list -a tags -a memory.total -a cpu.total -a platform_version --config $chef_config
 }
 
 function keff()
@@ -593,20 +579,6 @@ function knife_node_edit()
 }
 alias ke=knife_node_edit
 
-
-function knife_node_search()
-{
-    if [ -z "$1" ]; then
-        echo "You must provide a node name."
-        return
-    fi
-
-    setchefconfig "$1"
-    echo knife node show --config $chef_config "$1"
-    knife node show --config $chef_config "$1"
-}
-alias ns=knife_node_show
-
 function __show__cookbook__version()
 {
     rm /tmp/cbv > /dev/null 2>&1;
@@ -615,6 +587,19 @@ function __show__cookbook__version()
     grep version /tmp/cbv
 }
 alias cbv="__show__cookbook__version"
+
+function knife_node_show()
+{
+    setchefconfig "$1"
+    if [ '-l' == "$2" ]; then
+        knife node show "$1" --config $chef_config --format json -l > /tmp/$1.json
+        vim /tmp/$1.json
+    else
+        knife search node "n:$1" --config $chef_config -a chef_environment -a run_list -a tags -a ipaddress -a platform_version -a creation_info -a dmi.system.product_name -a base.tor_info | sed 's/recipe\[//g' | sed 's/\]//g'
+    fi
+}
+alias kns="knife_node_show"
+alias show="knife_node_show"
 
 function search_chef_environment()
 {
@@ -698,6 +683,22 @@ function multitail_with_search_internal()
     cmd=$(echo; echo -n "multitail "; knife search node "$search" -a ipaddress 2>/dev/null | grep ipaddress | cut -d":" -f2 | xargs -I '{}' -n 1 -i sh -c 'echo -l \"ssh $1 sudo tail -f /var/log/squid/access.log\"' - {} | tr "\n" " "; echo); eval $cmd
 }
 alias mtail=multitail_with_search_internal
+
+
+function multitail_with_search_external()
+{
+    if [ -z "$1" ]; then
+        echo Usage: You must pass the Chef Search and logfile.
+        echo Example: 'chef_environment:ext-prod-coreinfra AND data_center_name:chicago AND recipe:squid_proxy' /var/log/squid/access.log
+        echo ""
+        return
+    fi
+    local search="$1"
+    local logfile="$2"
+
+    cmd=$(echo; echo -n "multitail "; eknife search node "$search" -a ipaddress 2>/dev/null | grep ipaddress | cut -d":" -f2 | xargs -I '{}' -n 1 -i sh -c 'echo -l \"ssh $1 sudo tail -f /var/log/squid/access.log\"' - {} | tr "\n" " "; echo); eval $cmd
+}
+alias emtail=multitail_with_search_external
 
 
 function show_dcs_in_chef_environment()
