@@ -36,8 +36,7 @@
     include-jira-summary = true
     jira-summary-length = 40
     use-jira-as-prefix = true
-    delete-branch = never
-
-
+    delete-branch = false
+    branch-skip-confirm = true
 [push]
 	default = nothing

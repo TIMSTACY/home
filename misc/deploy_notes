@@ -3,5 +3,10 @@
 ##############################################################################################################
 
 
-./run python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py --knife-config ~/.chef/knife.external.rb -a -r [REASON] -e [environments] -q [quoted query] | -c [cookbooks] --concurrency 50 --test-run
+knifessh --knife-config ~/.chef/knife.rb -a -r [REASON] -e [environments] -q [quoted query] | -c [cookbooks] --concurrency 50 --test-run
+knifessh --knife-config ~/.chef/knife.external.rb -a -r [REASON] -e [environments] -q [quoted query] | -c [cookbooks] --concurrency 50 --test-run
+
+/opt/virtualenv/devws/bin/python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/knife_ssh.py --knife-config ~/.chef/knife.external.rb --audit-runlist --concurrency 50 -a -e <env> -c <cb> -r <chg> --test-run
+
+knssh --knife-config ~/.chef/knife.external.rb --audit-runlist --concurrency 50 -a -e ENV -c CB -r CHG --test-run
 

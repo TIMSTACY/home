@@ -3,7 +3,7 @@
 git clone git@github.com:tradingtechnologies/debesys.git debesys_
 cd debesys_
 git submodule update --init --recursive
-git checkout develop
+git checkout master
 --> then manually copy over the commit hook
 cp prepare-commit-msg ~/dev-root/path/.git/hooks
 

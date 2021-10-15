@@ -51,7 +51,7 @@ Plugin 'ctrlp.vim'
 
 Plugin 'tabman.vim'
 
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 " Plugin 'airblade-vim-gitgutter'
 
@@ -142,10 +142,14 @@ let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=1
 let g:syntastic_enable_highlighting=1
 let g:syntastic_quiet_messages = { "level": "warnings" }
+let g:syntastic_python_checker = ['python']
+let g:syntastic_python_python_exec = '/opt/virtualenv/devws3/bin/python'
 
 augroup filetype
   autocmd! BufRead,BufNewFile *.py.erb set filetype=python
 augroup END
+let g:syntastic_ignore_files = ['\m/*.py.erb']
+
 
 " --------------- Remove trailing whitespace -------------
 :autocmd BufWritePre *.py %s/\s\+$//e

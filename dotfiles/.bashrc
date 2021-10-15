@@ -88,6 +88,7 @@ export JENKINS_BOT_SSH_KEY=~/.ssh/jenkins_bot_ldap_rsa
 export DEVWS_SKIP_VALIDATE_REQUIREMENTS=1
 export USE_PYTHON3=1
 export PYTHONWARNINGS="ignore::DeprecationWarning"
+export CHGCMD_DESC_WIDTH=60
 
 
 # ENABLE TO SKIP DCs in KNIFE_SSH.PY
@@ -122,6 +123,7 @@ alias vimvim='vim ~/.vimrc'
 alias envs='echo PATH $PATH'
 alias vnotes='vim ~/notes'
 alias cnotes='cat ~/notes'
+alias ckitchentests='cat ~/kitchentests_notes'
 alias snotes='cat ~/splunk_notes'
 alias cchef14='cat ~/chef14_notes'
 alias crebasenodes='cat ~/rebase_notes'
@@ -166,6 +168,8 @@ alias edgeproxy='cd ~/dev-root/EdgeProxy'
 alias tailtempvm='tail -f -n 20 /var/log/debesys/temp_vm.log'
 alias S3='aws s3 ls s3://deploy-debesys'
 alias mdbd='sudo mount -o user=intad/tstacy -t cifs //chifs01.int.tt.local/Share/Dead_By_Dawn /mnt/dbd/'
+alias mjump='sudo mount.cifs -o user=tstacy //172.17.250.29/Share /mnt/CHIJCHFS01'
+alias umjump='sudo mount /mnt/CHIJCHFS01'
 alias glog='git glog'
 alias tkw='tmux kill-window'
 alias tkp='tmux kill-pane'
@@ -205,6 +209,10 @@ alias t3='/opt/virtualenv/triage/bin/t3'
 alias run='echo "Dont use run anymore."'
 alias py2='/opt/virtualenv/devws/bin/python2'
 alias py3='/opt/virtualenv/devws3/bin/python3'
+alias changecommands='/opt/virtualenv/changecommands/bin/python3'
+alias changecommands_test='/opt/virtualenv/changecommands_test/bin/python3'
+alias python3='/opt/python/python_3.6.5/bin/python3.6'
+alias upgrade_chgcmd='pipx upgrade chgcmd -i https://pypi-dev.debesys.net/simple/'
 
 # Shared bash functions
 if [ -f $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bashrc/chef.bash ]; then
@@ -513,7 +521,7 @@ function setchefconfig()
 
     # Note: double-brackets [[ ]] cause == to do wildcard matching and the behavior
     # or == is different with single brackets [ ].
-    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* || $1 == ty* || $1 == sp*  || $1 == bk* || $1 == ba* || $1 == se* ]]; then
+    if [[ $1 == ar* || $1 == ch* || $1 == ny* || $1 == fr* || $1 == sy* || $1 == sg* || $1 == ln* || $1 == hk* || $1 == ty* || $1 == sp*  || $1 == bk* || $1 == ba* || $1 == se*  || $1 == jch* || $1 == jln* ]]; then
         chef_config=~/.chef/knife.external.rb
     elif [[ $1 == *"ip-10-210"* || $1 == *"ip-10-213"* || $1 == *"ip-10-215"* ]]; then
         chef_config=~/.chef/knife.external.rb
@@ -590,6 +598,21 @@ alias cbv="__show__cookbook__version"
 
 function knife_node_show()
 {
+    node=$1
+    shift
+    setchefconfig "$node"
+    # Reminder here that when we check '-l' == "$1" that this was actually the section argument passed to kns.
+    if [ '-l' == "$1" ]; then
+        knife node show "$node" --config $chef_config --format json -l > /tmp/$node.json
+        vim /tmp/$node.json
+    else
+        knife search node "n:$node" --config $chef_config $@
+    fi
+}
+alias kns="knife_node_show"
+
+function node_show_pretty()
+{
     setchefconfig "$1"
     if [ '-l' == "$2" ]; then
         knife node show "$1" --config $chef_config --format json -l > /tmp/$1.json
@@ -598,8 +621,8 @@ function knife_node_show()
         knife search node "n:$1" --config $chef_config -a chef_environment -a run_list -a tags -a ipaddress -a platform_version -a creation_info -a dmi.system.product_name -a base.tor_info | sed 's/recipe\[//g' | sed 's/\]//g'
     fi
 }
-alias kns="knife_node_show"
-alias show="knife_node_show"
+alias show="node_show_pretty"
+
 
 function search_chef_environment()
 {
@@ -1138,3 +1161,6 @@ complete -o bashdefault -o default -o nospace -F _git_mine g
 umask 002
 
 
+
+# Created by `pipx` on 2021-05-12 15:05:51
+export PATH="$PATH:/home/tstacy/.local/bin"
