@@ -8,7 +8,7 @@
 # hlsearch on (H) or off (h):
 ~h
 # Last Search Pattern:
-~MSle0~/mjump
+~MSle0~/coreinfra
 
 # Last Substitute Search Pattern:
 ~MSle0&feature_flags
@@ -17,11 +17,12 @@
 $
 
 # Command Line History (newest to oldest):
-:q
 :wq
+:q
 :nohl
-:q!
 :w
+:164
+:q!
 :1368
 :1360
 :700
@@ -66,13 +67,37 @@ $
 :223
 :!
 :q:q
-:nhol
 
 # Search String History (newest to oldest):
+? \s\+$
+?/coreinfra
+?/prod
+?/ret
+?/nodejs
+?/jenkins_
+?/bash
+?/use_aws_keys
+?/JENKINS
+?/jenkins_b
+?/AwsAut
+?/restart
+?/git-sync
+?/gits
+?/debesys
+?/clone
+?/debrepo
+?/get_python
+?/get_pythong
+?/self.servers
+?/gla
+?/NED
+?/my_ipaddress
+?/identify
+?/reboot
+?/t3
 ?/mjump
 ?/jch
 ?/CHGCMD
-? \s\+$
 ?/fixgworders
 ?/patch_
 ?/got this
@@ -94,31 +119,6 @@ $
 ?/self.vms_to_move_planned
 ?/prices_by_
 ??nohl
-?/isolated_vmhs
-?/by_memory
-?/UmpWipe
-?/feature_flags
-?/data_center
-?/feature_fl
-?/class
-?/def
-?/ignore_un
-?/by-mem
-?/iso_app
-?/squidproxy_deploy
-?/startswith
-?/start
-?/start_with
-?/starts_with
-?/n
-?/responder_deploy_options
-?/BehindHAPro
-?/migrate_
-?/-m
-?/isolate_apps
-?/memory_usage
-?/by_mem
-?/sendto
 
 # Expression History (newest to oldest):
 
@@ -127,368 +127,300 @@ $
 # Input Line History (newest to oldest):
 
 # Registers:
-"0	CHAR	0
-	1
-""1	LINE	0
-	#alias upgrade_chgcmd='pipx upgrade chgcmd -i https://pypi-dev.debeys.net/simple/'
+"0	LINE	0
+	when 'ext-prod-coreinfra'
+	  if dc_name == 'aurora'
+	    default['keepalived']['virtual_router_id'] = 120
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+	  elsif dc_name == 'bangkok'
+	    default['keepalived']['virtual_router_id'] = 121
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+	  elsif dc_name == 'basildon'
+	    default['keepalived']['virtual_router_id'] = 122
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+	  elsif dc_name == 'chicago'
+	    default['keepalived']['virtual_router_id'] = 123
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+	  elsif dc_name == 'frankfurt'
+	    default['keepalived']['virtual_router_id'] = 124
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+	  elsif dc_name == 'hong_kong'
+	    default['keepalived']['virtual_router_id'] = 125
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+	  elsif dc_name == 'london'
+	    default['keepalived']['virtual_router_id'] = 126
+	    default['keepalived']['virtual_ip'] = "10.#{dc_octet}.1.15"
+	    default['keepalived']['public_ip'] = nil
+	    default['haproxy']['private_ip']['tt'] = nil
+	    default['haproxy']['private_ip']['bt'] = nil
+	    default['haproxy']['private_ip']['tns'] = nil
+"1	LINE	0
+	
 "2	LINE	0
-	
+	end
 "3	LINE	0
-	                'remove_oneoffs': []
-"4	LINE	0
 	
+"4	LINE	0
+	    dcname = "chicago"
 "5	LINE	0
-	            
+	    chefenv = "ext-uat-cert"
 "6	LINE	0
-	            rm_oneoff = ""
+	    dc_abbrev = "ch"
 "7	LINE	0
 	
 "8	LINE	0
-	cb2ext ase 0.2.34
+	include_recipe "jenkins_agent::serverless_setup"
 "9	LINE	0
-	
+	# Serverless setup
 "j	CHAR	0
 	jjjjjjjjjjjjjjjjjjjjjj
-"-	CHAR	0
-	1
+""-	CHAR	0
+	e
 
 # File marks:
-'0  1  0  ~/home_repo/copy_dotfiles.sh
-'1  215  81  ~/.bashrc
-'2  216  0  ~/.bashrc
-'3  1  0  ~/.bashrc
-'4  22  40  ~/.bashrc
-'5  10  53  ~/chgcmd_notes
-'6  21  0  ~/chgcmd_notes
-'7  1  0  /tmp/bash-fc-282141419949
-'8  84  0  /tmp/knife-edit-20211014-52175-1lx85rh.json
-'9  21  0  ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/simple_request.py
+'0  1  13  ~/dev-root/debesys_three/.git/COMMIT_EDITMSG
+'1  982  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'2  972  47  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'3  4  21  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/recipes/egress_squidproxy.rb
+'4  984  40  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'5  99  18  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'6  92  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'7  983  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'8  979  47  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+'9  975  51  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
 
 # Jumplist (newest first):
--'  1  0  ~/home_repo/copy_dotfiles.sh
--'  215  81  ~/.bashrc
--'  216  0  ~/.bashrc
--'  529  0  ~/.bashrc
--'  218  7  ~/.bashrc
--'  91  7  ~/.bashrc
--'  1  0  ~/.bashrc
--'  355  23  ~/.bashrc
--'  22  1  ~/.bashrc
--'  214  44  ~/.bashrc
--'  10  53  ~/chgcmd_notes
--'  8  4  ~/chgcmd_notes
--'  21  0  ~/chgcmd_notes
--'  1  0  ~/chgcmd_notes
--'  1  0  /tmp/bash-fc-282141419949
--'  84  0  /tmp/knife-edit-20211014-52175-1lx85rh.json
--'  1  0  /tmp/knife-edit-20211014-52175-1lx85rh.json
--'  21  0  ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/simple_request.py
--'  8  0  ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/tests
--'  1  0  ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/simple_request.py
--'  1  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/fixgworders/recipes/default.rb
--'  382  64  ~/dev-root/debesys_one/deploy/chef/scripts/debesys_vmware_api.py
--'  560  28  ~/dev-root/debesys_one/deploy/chef/scripts/debesys_vmware_api.py
--'  1  23  ~/dev-root/debesys_three/.git/COMMIT_EDITMSG
--'  1265  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1285  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1362  16  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1  0  /tmp/changecommands_tests/patch_023.results
--'  4  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.results
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.results
--'  13  23  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.json
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.json
--'  1  0  /tmp/changecommands_tests/patch_021.results
--'  1365  118  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1  0  /tmp/changecommands_tests/patch_022.results
--'  1169  34  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1173  16  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1276  12  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1256  16  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1369  8  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1281  21  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1341  8  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  5  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.results
--'  1340  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.results
--'  18  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.json
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.json
--'  5  157  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.results
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.results
--'  18  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.json
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.json
--'  1  0  /tmp/changecommands_tests/patch_020.results
--'  1  10  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.results
--'  7  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.results
--'  1377  8  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
--'  17  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.json
--'  11  6  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.json
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.json
--'  1  0  ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_001.json
--'  1  32  ~/dev-root/debesys_one/.git/COMMIT_EDITMSG
--'  1889  0  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  678  8  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  684  3  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  1011  20  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  610  8  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  705  56  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  1246  43  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  695  56  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  665  0  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  698  16  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  707  0  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  568  8  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  569  4  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  603  26  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  470  21  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  726  8  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  1416  33  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  1411  34  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  762  25  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  756  31  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  611  26  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  270  4  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  142  4  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  620  16  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  617  20  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  667  0  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  647  0  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  469  0  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  435  4  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  1387  43  ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
--'  528  0  ~/.bashrc
--'  217  7  ~/.bashrc
--'  354  23  ~/.bashrc
--'  215  81  ~/.bashrc
--'  216  0  ~/.bashrc
--'  529  0  ~/.bashrc
--'  218  7  ~/.bashrc
+-'  1  13  ~/dev-root/debesys_three/.git/COMMIT_EDITMSG
+-'  982  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  972  4  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  984  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  4  21  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/recipes/egress_squidproxy.rb
+-'  1  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/recipes/egress_squidproxy.rb
+-'  99  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  96  6  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  92  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  983  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  336  63  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  979  4  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  975  4  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  906  4  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  889  10  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  148  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  1  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+-'  1  0  ~/dev-root/debesys_two/.git/COMMIT_EDITMSG
+-'  23  13  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/create_nlb.rb
+-'  43  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/create_nlb.rb
+-'  130  23  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
+-'  222  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
+-'  1  30  ~/dev-root/debesys_one/.git/COMMIT_EDITMSG
+-'  14  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  15  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  101  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  92  35  ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  1  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  742  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  492  4  ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  34  2  ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  1  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  1  0  ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/jenkins_agent/recipes/bpo.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  137  5  ~/dev-root/debesys_one/deploy/chef/environments/int-dev-jenkins.rb
+-'  1  0  ~/dev-root/debesys_one/deploy/chef/environments/int-dev-jenkins.rb
+-'  744  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  44  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  715  4  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  709  4  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  669  12  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  668  27  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  609  2  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  366  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  321  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  301  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  74  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  737  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+-'  25  14  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  35  4  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  34  4  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  14  2  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  30  2  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  15  4  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  16  4  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  65  10  ~/dev-root/debesys_two/deploy/chef/cookbooks/ttservice/definitions/routes.rb
+-'  88  28  ~/dev-root/debesys_two/deploy/chef/cookbooks/ttservice/definitions/routes.rb
+-'  80  28  ~/dev-root/debesys_two/deploy/chef/cookbooks/ttservice/definitions/routes.rb
+-'  52  16  ~/dev-root/debesys_two/deploy/chef/cookbooks/ttservice/definitions/routes.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/ttservice/definitions/routes.rb
+-'  73  18  ~/dev-root/debesys_two/deploy/chef/cookbooks/tt_ops/recipes/default.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/tt_ops/recipes/default.rb
+-'  17  2  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  13  2  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  39  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  21  38  ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/simple_request.py
+-'  40  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/create_nlb.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/create_nlb.rb
+-'  35  26  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
+-'  61  2  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/attributes/default.rb
+-'  94  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+-'  25  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/vlans/providers/add_dmz_vlan.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/vlans/providers/add_dmz_vlan.rb
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
+-'  6  23  /tmp/knife-edit-20211026-121074-1w4xx1x.json
+-'  1  0  /tmp/knife-edit-20211026-121074-1w4xx1x.json
+-'  36  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  38  0  ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+-'  1  0  ~/dev-root/debesys_four/deploy/chef/cookbooks/feature_flags/attributes/default.rb
+-'  381  29  ~/dev-root/debesys_two/deploy/chef/scripts/aws_authenticator.py
+-'  1  0  ~/dev-root/debesys_two/deploy/chef/scripts/aws_authenticator.py
+-'  797  62  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  734  41  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  2190  57  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1885  12  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1844  60  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1839  84  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1950  62  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1890  37  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1889  12  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  1886  44  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  806  66  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  808  31  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+-'  49  30  ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
 
 # History of marks within files (newest to oldest):
 
-> ~/home_repo/copy_dotfiles.sh
+> ~/dev-root/debesys_three/.git/COMMIT_EDITMSG
+	"	1	13
+	^	1	14
+	.	1	13
+	+	1	13
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/attributes/default.rb
+	"	982	0
+	^	975	52
+	.	984	0
+	+	889	12
+	+	892	61
+	+	899	61
+	+	906	61
+	+	913	61
+	+	920	61
+	+	927	61
+	+	934	61
+	+	941	61
+	+	948	61
+	+	955	61
+	+	962	61
+	+	969	61
+	+	976	61
+	+	891	51
+	+	898	51
+	+	905	51
+	+	912	51
+	+	919	51
+	+	926	51
+	+	933	51
+	+	940	51
+	+	947	51
+	+	954	51
+	+	961	51
+	+	968	51
+	+	975	51
+	+	891	51
+	+	898	51
+	+	905	51
+	+	912	51
+	+	919	51
+	+	926	51
+	+	933	51
+	+	940	51
+	+	947	51
+	+	954	51
+	+	961	51
+	+	968	51
+	+	975	51
+	+	891	50
+	+	898	50
+	+	905	50
+	+	912	50
+	+	919	50
+	+	926	50
+	+	933	50
+	+	940	50
+	+	947	50
+	+	954	50
+	+	961	50
+	+	968	50
+	+	975	50
+	+	96	6
+	+	891	51
+	+	898	51
+	+	905	51
+	+	912	51
+	+	919	51
+	+	926	51
+	+	933	51
+	+	940	51
+	+	947	51
+	+	954	51
+	+	961	50
+	+	968	51
+	+	975	51
+	+	984	0
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/tthaproxy/recipes/egress_squidproxy.rb
+	"	4	21
+	^	4	22
+	.	4	21
+	+	4	21
+
+> ~/dev-root/debesys_two/.git/COMMIT_EDITMSG
 	"	1	0
-
-> ~/.bashrc
-	"	215	81
-	^	215	82
-	.	215	81
-	+	91	26
-	+	216	0
-	+	215	81
-
-> ~/chgcmd_notes
-	"	10	53
-	^	10	54
-	.	10	53
-	+	18	36
-	+	8	0
-	+	10	53
-
-> /tmp/bash-fc-282141419949
-	"	1	0
-	^	1	0
+	^	1	38
 	.	1	0
 	+	1	0
 
-> /tmp/knife-edit-20211014-52175-1lx85rh.json
-	"	84	0
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/create_nlb.rb
+	"	23	13
 
-> ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/simple_request.py
-	"	21	0
-	^	21	36
-	.	21	35
-	+	21	35
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/fixgworders/recipes/default.rb
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/debesys_vmware_api.py
-	"	382	64
-	^	567	84
-	.	567	83
-	+	579	0
-	+	562	75
-	+	567	78
-	+	586	68
-	+	851	17
-	+	567	83
-
-> ~/dev-root/debesys_three/.git/COMMIT_EDITMSG
-	"	1	23
-	^	1	24
-	.	1	23
-	+	1	23
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
-	"	1265	0
-	^	1365	90
-	.	1285	0
-	+	1240	15
-	+	1240	16
-	+	1286	0
-	+	1286	0
-	+	1240	44
-	+	1285	0
-	+	1241	0
-	+	1286	0
-	+	1171	31
-	+	1249	48
-	+	1341	0
-	+	1377	0
-	+	1373	0
-	+	1376	0
-	+	1341	0
-	+	1173	35
-	+	1207	69
-	+	1184	32
-	+	1207	17
-	+	1285	0
-	+	1271	81
-	+	1273	0
-	+	1281	59
-	+	1240	67
-	+	1250	0
-	+	1255	0
-	+	1239	126
-	+	1255	76
-	+	1283	0
-	+	1359	81
-	+	1367	0
-	+	1361	43
-	+	1366	0
-	+	1364	10
-	+	1362	80
-	+	1364	44
-	+	1365	43
-	+	1362	75
-	+	1365	79
-	+	1363	0
-	+	1364	8
-	+	1367	0
-	+	1362	20
-	+	1365	20
-	+	1173	0
-	+	1360	30
-	+	1172	0
-	+	1360	32
-	+	1362	0
-	+	1184	40
-	+	1209	44
-	+	1240	81
-	+	1256	43
-	+	1272	46
-	+	1360	45
-	+	1172	43
-	+	1240	0
-	+	1362	85
-	+	1365	89
-	+	1362	81
-	+	1285	0
-	o	1281	21
-
-> /tmp/changecommands_tests/patch_023.results
-	"	1	0
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.results
-	"	7	107
-	^	3	0
-	.	7	107
-	+	1	143
-	+	5	195
-	+	7	154
-	+	2	0
-	+	3	193
-	+	7	107
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.json
-	"	13	23
-	^	15	49
-	.	15	48
-	+	10	18
-	+	12	39
-	+	15	48
-
-> /tmp/changecommands_tests/patch_021.results
-	"	1	0
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.results
-	"	5	82
-	^	1	202
-	.	1	202
-	+	1	0
-	+	1	205
-	+	1	0
-	+	1	142
-	+	5	107
-	+	1	202
-
-> /tmp/changecommands_tests/patch_022.results
-	"	1	0
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.results
-	"	5	0
-	^	5	108
-	.	5	107
-	+	1	215
-	+	1	165
-	+	1	173
-	+	5	107
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.json
-	"	10	18
-	^	10	19
-	.	10	18
-	+	15	35
-	+	10	18
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.json
-	"	12	18
-	^	10	19
-	.	10	18
-	+	15	25
-	+	10	18
-
-> /tmp/changecommands_tests/patch_020.results
-	"	1	0
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.results
-	"	1	10
-	^	1	11
-	.	1	10
-	+	1	148
-	+	5	203
-	+	7	126
-	+	2	0
-	+	1	16
-	+	3	149
-	+	5	204
-	+	7	114
-	+	1	10
-
-> /tmp/knife-edit-20211012-132350-lisxil.json
-	"	6	0
-	.	6	0
-	+	6	0
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.json
-	"	17	0
-	^	5	46
-	.	5	45
-	+	5	45
-	+	10	18
-	+	13	28
-	+	12	28
-	+	10	18
-	+	5	45
-
-> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_001.json
-	"	1	0
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
+	"	130	23
+	^	202	69
+	.	202	68
+	+	203	6
+	+	201	58
+	+	203	62
+	+	202	68
 
 > ~/dev-root/debesys_one/.git/COMMIT_EDITMSG
-	"	1	32
-	^	1	33
-	.	1	32
+	"	1	30
+	^	1	31
+	.	1	30
 	+	1	37119
 	+	6	8
 	+	1	18
@@ -505,13 +437,316 @@ $
 	+	2	0
 	+	1	48
 	+	4	1
-	+	1	32
+	+	1	30
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+	"	14	0
+	.	15	0
+	+	90	0
+	+	95	0
+	+	90	42
+	+	84	41
+	+	85	38
+	+	91	39
+	+	87	47
+	+	88	47
+	+	102	0
+	+	96	40
+	+	98	37
+	+	92	0
+	+	86	37
+	+	97	38
+	+	99	47
+	+	100	47
+	+	103	39
+	+	102	41
+	+	114	0
+	+	108	30
+	+	109	37
+	+	110	47
+	+	111	47
+	+	112	47
+	+	114	31
+	+	126	0
+	+	115	39
+	+	109	38
+	+	120	30
+	+	121	38
+	+	122	53
+	+	123	47
+	+	124	47
+	+	126	31
+	+	127	39
+	+	15	20
+	+	15	0
+	+	15	0
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+	"	742	0
+	.	742	0
+	+	742	0
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+	"	34	2
+	.	29	0
+	+	29	0
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/jenkins_agent/recipes/bpo.rb
+	"	1	0
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+	"	1	0
+
+> ~/dev-root/debesys_one/deploy/chef/environments/int-dev-jenkins.rb
+	"	137	5
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+	"	744	0
+	^	741	0
+	.	745	0
+	+	730	50
+	+	731	1
+	+	732	3
+	+	733	5
+	+	734	0
+	+	730	58
+	+	729	120
+	+	736	0
+	+	742	0
+	+	740	3
+	+	745	0
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/serverless_setup.rb
+	"	25	14
+	^	25	19
+	.	25	14
+	+	8	1
+	+	5	16
+	+	9	23
+	+	10	0
+	+	9	0
+	+	10	0
+	+	40	0
+	+	9	0
+	+	10	0
+	+	14	0
+	+	13	1
+	+	17	4
+	+	39	0
+	+	24	0
+	+	20	0
+	+	21	39
+	+	25	54
+	+	25	0
+	+	25	43
+	+	38	0
+	+	25	64
+	+	25	0
+	+	10	2
+	+	10	35
+	+	12	0
+	+	10	0
+	+	25	0
+	+	25	52
+	+	25	2
+	+	25	2
+	+	25	2
+	+	25	3
+	+	25	3
+	+	25	69
+	+	25	57
+	+	26	0
+	+	27	54
+	+	32	51
+	+	34	59
+	+	27	0
+	+	32	2
+	+	38	2
+	+	38	0
+	+	38	7
+	+	38	0
+	+	25	2
+	+	32	2
+	+	38	0
+	+	25	0
+	+	38	5
+	+	39	0
+	+	37	0
+	+	39	0
+	+	13	18
+	+	16	0
+	+	14	11
+	+	16	7
+	+	14	2
+	+	15	2
+	+	16	2
+	+	17	2
+	+	14	2
+	+	15	3
+	+	16	3
+	+	17	2
+	+	16	9
+	+	14	36
+	+	14	6
+	+	16	15
+	+	14	11
+	+	16	9
+	+	14	0
+	+	26	0
+	+	33	0
+	+	26	0
+	+	21	0
+	+	20	0
+	+	21	3
+	+	23	3
+	+	22	0
+	+	28	0
+	+	34	0
+	+	35	0
+	+	36	0
+	+	34	3
+	+	27	3
+	+	23	0
+	+	13	17
+	+	25	14
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/ttservice/definitions/routes.rb
+	"	65	10
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/tt_ops/recipes/default.rb
+	"	73	18
+
+> ~/dev-root/debesys_four/deploy/chef/scripts/changecommands/simple_request.py
+	"	21	38
+	^	21	32
+	.	21	38
+	+	21	38
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/squid_proxy/attributes/default.rb
+	"	1	0
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
+	"	94	0
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/vlans/providers/add_dmz_vlan.rb
+	"	25	0
+
+> /tmp/knife-edit-20211026-121074-1w4xx1x.json
+	"	6	23
+	^	6	24
+	.	6	23
+	+	10	5
+	+	6	23
+
+> ~/dev-root/debesys_four/deploy/chef/cookbooks/feature_flags/attributes/default.rb
+	"	1	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/aws_authenticator.py
+	"	381	29
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/bump_cookbook.py
+	"	797	62
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
+	"	730	0
+
+> ~/dev-root/debesys_four/deploy/chef/cookbooks/lbm_ump/recipes/setup_wipe.rb
+	"	90	0
+
+> ~/dev-root/debesys_four/ledger/ttledgerapi/README
+	"	1	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/upload_debesys.py
+	"	164	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/package-debesys.sh
+	"	40	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/host_power_control.bash
+	"	17	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/debesys_label_git_flow_branch.bash
+	"	37	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/cassandra_recovery.bash
+	"	75	0
+
+> ~/dev-root/debesys_two/deploy/chef/scripts/copy_build.sh
+	"	1	0
+
+> ~/dev-root/debesys_four/deploy/chef/scripts/debesys_server.py
+	"	1718	18
+
+> ~/.bashrc
+	"	956	9
+	^	215	82
+	.	215	81
+	+	91	26
+	+	216	0
+	+	215	81
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/files/default/changecommands_requirements.txt
+	"	14	10
+	^	14	11
+	.	14	10
+	+	1	14
+	+	14	10
+
+> /tmp/knife-edit-20211021-17921-s6z9yj.json
+	"	48	27
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/jenkins_agent/files/default/devws3_requirements.txt
+	"	1	0
+
+> /tmp/knife-edit-20211021-8823-g6mbji.json
+	"	43	40
+	^	43	41
+	.	43	40
+	+	43	0
+	+	42	33
+	+	43	40
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/deploy_one_off.py
+	"	1569	10
+
+> /tmp/knife-edit-20211021-7930-jknoe6.json
+	"	12	25
+
+> /tmp/knife-edit-20211021-6914-p6mqef.json
+	"	10	5
+	^	10	6
+	.	10	5
+	+	10	5
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/attributes/default.rb
+	"	5	57
+	^	5	58
+	.	5	57
+	+	5	57
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/jenkins_agent/recipes/worker.rb
+	"	1	0
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/virtualip/recipes/dedicated_jpm_vip.rb
+	"	13	25
+
+> /tmp/knife-edit-20211020-199235-oshjpo.json
+	"	6	21
+	.	6	21
+	+	6	21
+
+> ~/dev-root/debesys_three/deploy/chef/cookbooks/squid_proxy/templates/default/forward_vpc_proxy_urls.conf.erb
+	"	1	0
+
+> ~/dev-root/debesys_one/deploy/chef/scripts/drchef.py
+	"	165	33
+	.	164	35
+	+	164	35
 
 > ~/dev-root/debesys_one/deploy/chef/scripts/optimize_vmware_load.py
-	"	1889	0
-	^	683	70
-	.	683	61
-	+	1785	71
+	"	102	43
+	^	102	44
+	.	102	43
 	+	1792	15
 	+	1791	0
 	+	1792	97
@@ -611,6 +846,288 @@ $
 	+	1011	54
 	+	684	0
 	+	683	61
+	+	102	43
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/base/recipes/ttrepo.rb
+	"	1	0
+
+> /tmp/knife-edit-20211019-109240-9r91zu.json
+	"	3	0
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/data_center/definitions/find_primary_market.rb
+	"	147	40
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_024.results
+	"	1	171
+	^	1	133
+	.	1	171
+	+	1	0
+	+	1	170
+	+	3	200
+	+	1	184
+	+	5	138
+	+	5	0
+	+	1	133
+	+	1	0
+	+	1	171
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/generate.py
+	"	1369	36
+	^	1369	37
+	.	1369	36
+	+	1240	15
+	+	1240	16
+	+	1286	0
+	+	1286	0
+	+	1240	44
+	+	1285	0
+	+	1241	0
+	+	1286	0
+	+	1171	31
+	+	1249	48
+	+	1341	0
+	+	1381	0
+	+	1377	0
+	+	1380	0
+	+	1341	0
+	+	1173	35
+	+	1207	69
+	+	1184	32
+	+	1207	17
+	+	1285	0
+	+	1271	81
+	+	1273	0
+	+	1281	59
+	+	1240	67
+	+	1250	0
+	+	1255	0
+	+	1239	126
+	+	1255	76
+	+	1283	0
+	+	1359	81
+	+	1371	0
+	+	1361	43
+	+	1366	0
+	+	1364	10
+	+	1362	80
+	+	1364	44
+	+	1365	43
+	+	1362	75
+	+	1365	79
+	+	1363	0
+	+	1364	8
+	+	1371	0
+	+	1362	20
+	+	1365	20
+	+	1173	0
+	+	1360	30
+	+	1172	0
+	+	1360	32
+	+	1362	0
+	+	1184	40
+	+	1209	44
+	+	1240	81
+	+	1256	43
+	+	1272	46
+	+	1360	45
+	+	1172	43
+	+	1240	0
+	+	1362	85
+	+	1365	89
+	+	1362	81
+	+	1285	0
+	+	1163	32
+	+	1196	58
+	+	1196	64
+	+	1197	0
+	+	1367	105
+	+	1369	36
+	+	1368	16
+	+	1369	36
+	o	1281	21
+
+> /tmp/changecommands_tests/patch_024.results
+	"	1	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.json
+	"	5	6
+	^	15	49
+	.	15	48
+	+	10	18
+	+	12	39
+	+	15	48
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_024.json
+	"	16	0
+	^	6	4
+	.	6	3
+	+	1	261
+	+	2	25
+	+	3	32
+	+	4	11
+	+	5	52
+	+	7	16
+	+	8	16
+	+	9	32
+	+	10	29
+	+	11	41
+	+	12	23
+	+	13	29
+	+	14	5
+	+	15	3
+	+	16	0
+	+	3	30
+	+	13	24
+	+	5	51
+	+	6	3
+
+> /tmp/bash-fc-281692882297
+	"	1	1
+	^	1	2
+	.	1	1
+	+	1	1
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.json
+	"	3	6
+	^	10	19
+	.	10	18
+	+	15	35
+	+	10	18
+
+> ~/dev-root/debesys_two/deploy/chef/cookbooks/lbm_ump/files/default/umpwipe.py
+	"	34	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/debesys_server.py
+	"	1721	12
+
+> /tmp/check_getsocket_ip.py
+	"	4	0
+	^	4	0
+	.	3	49
+	+	3	49
+
+> ~/home_repo/.git/COMMIT_EDITMSG
+	"	1	6
+	^	1	7
+	.	1	6
+	+	1	6
+
+> ~/home_repo/copy_dotfiles.sh
+	"	1	0
+
+> ~/chgcmd_notes
+	"	10	53
+	^	10	54
+	.	10	53
+	+	18	36
+	+	8	0
+	+	10	53
+
+> /tmp/bash-fc-282141419949
+	"	1	0
+	^	1	0
+	.	1	0
+	+	1	0
+
+> /tmp/knife-edit-20211014-52175-1lx85rh.json
+	"	84	0
+
+> ~/dev-root/debesys_one/deploy/chef/cookbooks/fixgworders/recipes/default.rb
+	"	1	0
+
+> ~/dev-root/debesys_one/deploy/chef/scripts/debesys_vmware_api.py
+	"	382	64
+	^	567	84
+	.	567	83
+	+	579	0
+	+	562	75
+	+	567	78
+	+	586	68
+	+	851	17
+	+	567	83
+
+> /tmp/changecommands_tests/patch_023.results
+	"	1	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_023.results
+	"	7	107
+	^	3	0
+	.	7	107
+	+	1	143
+	+	5	195
+	+	7	154
+	+	2	0
+	+	3	193
+	+	7	107
+
+> /tmp/changecommands_tests/patch_021.results
+	"	1	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.results
+	"	5	82
+	^	1	202
+	.	1	202
+	+	1	0
+	+	1	205
+	+	1	0
+	+	1	142
+	+	5	107
+	+	1	202
+
+> /tmp/changecommands_tests/patch_022.results
+	"	1	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_022.results
+	"	5	0
+	^	5	108
+	.	5	107
+	+	1	215
+	+	1	165
+	+	1	173
+	+	5	107
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_021.json
+	"	12	18
+	^	10	19
+	.	10	18
+	+	15	25
+	+	10	18
+
+> /tmp/changecommands_tests/patch_020.results
+	"	1	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.results
+	"	1	10
+	^	1	11
+	.	1	10
+	+	1	148
+	+	5	203
+	+	7	126
+	+	2	0
+	+	1	16
+	+	3	149
+	+	5	204
+	+	7	114
+	+	1	10
+
+> /tmp/knife-edit-20211012-132350-lisxil.json
+	"	6	0
+	.	6	0
+	+	6	0
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_020.json
+	"	17	0
+	^	5	46
+	.	5	45
+	+	5	45
+	+	10	18
+	+	13	28
+	+	12	28
+	+	10	18
+	+	5	45
+
+> ~/dev-root/debesys_three/deploy/chef/scripts/changecommands/tests/success/patch_001.json
+	"	1	0
 
 > ~/dev-root/debesys_three/deploy/chef/cookbooks/lbm_ump/files/default/umpwipe.py
 	"	637	4
@@ -729,590 +1246,3 @@ $
 
 > ~/dev-root/debesys_three/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
 	"	136	0
-
-> ~/.config/pip/pip.conf
-	"	2	46
-	^	2	47
-	.	2	46
-	+	3	27
-	+	2	46
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/recipes/default.rb
-	"	280	0
-	^	60	26
-	.	281	0
-	+	281	38
-	+	281	34
-	+	281	13
-	+	281	38
-	+	281	84
-	+	281	37
-	+	281	0
-	+	281	42
-	+	281	41
-	+	281	0
-	+	281	102
-	+	281	112
-	+	281	92
-	+	281	104
-	+	281	112
-	+	281	107
-	+	281	35
-	+	281	0
-	+	281	3
-	+	281	0
-	+	281	23
-	+	281	15
-	+	281	21
-	+	281	0
-	+	281	22
-	+	281	71
-	+	281	70
-	+	281	0
-	+	281	30
-	+	281	0
-	+	281	2
-	+	281	21
-	+	281	76
-	+	281	69
-	+	281	75
-	+	281	69
-	+	281	100
-	+	281	94
-	+	281	112
-	+	281	106
-	+	281	2
-	+	281	33
-	+	281	27
-	+	281	11
-	+	281	0
-	+	281	0
-	+	281	3
-	+	281	1
-	+	281	27
-	+	281	15
-	+	281	26
-	+	281	22
-	+	281	28
-	+	281	5
-	+	281	2
-	+	281	43
-	+	281	22
-	+	281	0
-	+	281	93
-	+	281	87
-	+	281	93
-	+	281	87
-	+	281	118
-	+	281	112
-	+	281	130
-	+	281	124
-	+	281	0
-	+	281	0
-	+	281	27
-	+	281	0
-	+	281	35
-	+	281	3
-	+	281	0
-	+	281	0
-	+	281	56
-	+	281	0
-	+	281	2
-	+	281	0
-	+	281	46
-	+	281	0
-	+	64	0
-	+	160	48
-	+	281	0
-	+	60	26
-	+	281	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/attributes/default.rb
-	"	49	0
-	^	48	1
-	.	48	0
-	+	48	32
-	+	49	0
-	+	48	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/recipes/install_squidguard.rb
-	"	36	4
-	^	15	3
-	.	16	0
-	+	8	0
-	+	3	27
-	+	5	0
-	+	120	0
-	+	120	25
-	+	120	0
-	+	120	0
-	+	8	1
-	+	120	0
-	+	10	0
-	+	14	0
-	+	11	48
-	+	13	0
-	+	21	0
-	+	119	0
-	+	19	3
-	+	15	8
-	+	117	67
-	+	16	0
-
-> /tmp/knife-edit-20210929-98067-dmzhgs.json
-	"	12	6
-	.	12	0
-	+	12	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/vlans/providers/add_dmz_vlan.rb
-	"	34	61
-
-> /tmp/knife-edit-20210929-97395-eut1wk.json
-	"	1	0
-
-> /tmp/knife-edit-20210929-97276-jfwnuc.json
-	"	13	5
-	^	13	6
-	.	13	5
-	+	13	5
-
-> /tmp/knife-edit-20210929-96451-pno0e0.json
-	"	56	0
-	^	53	41
-	.	53	40
-	+	11	0
-	+	9	28
-	+	10	5
-	+	11	0
-	+	53	40
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/tthaproxy/recipes/egress_squidproxy.rb
-	"	46	61
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/test/integration/default/default_test.rb
-	"	76	2
-	^	74	80
-	.	75	11
-	+	12	42
-	+	11	40
-	+	13	0
-	+	12	43
-	+	13	58
-	+	14	0
-	+	13	61
-	+	14	55
-	+	14	0
-	+	15	0
-	+	14	61
-	+	14	60
-	+	14	65
-	+	15	0
-	+	15	0
-	+	14	66
-	+	15	0
-	+	41	0
-	+	38	0
-	+	34	23
-	+	42	78
-	+	44	0
-	+	46	0
-	+	44	3
-	+	50	0
-	+	48	3
-	+	46	76
-	+	50	46
-	+	54	0
-	+	52	3
-	+	54	45
-	+	58	0
-	+	56	3
-	+	58	74
-	+	62	0
-	+	60	3
-	+	62	31
-	+	66	0
-	+	64	3
-	+	66	31
-	+	70	0
-	+	68	3
-	+	70	74
-	+	74	0
-	+	72	3
-	+	74	79
-	+	43	11
-	+	47	11
-	+	51	11
-	+	55	11
-	+	59	11
-	+	63	11
-	+	67	11
-	+	71	11
-	+	75	11
-
-> ~/dev-root/debesys_two/deploy/chef/scripts/deploy_one_off.py
-	"	3342	40
-	^	1	26
-	.	1	0
-	+	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/recipes/create_nlb.rb
-	"	73	15
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/.kitchen.yml
-	"	60	25
-	^	26	14
-	.	26	13
-	+	59	8
-	+	61	8
-	+	30	0
-	+	58	6
-	+	61	0
-	+	26	47
-	+	29	34
-	+	24	30
-	+	22	0
-	+	25	0
-	+	60	7
-	+	58	0
-	+	26	13
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/vlans/.kitchen.yml
-	"	28	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/templates/default/squid.conf.erb
-	"	18	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/.kitchen/logs/squid-proxy-14109-centos-7.log
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/.kitchen/squid-proxy-14109-centos-7.yml
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/.kitchen/logs/kitchen.log
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/fix_stunnel/.kitchen.yml
-	"	45	43
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/fix_stunnel/test/fixtures/environments/int-dev-cert.json
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/test/fixtures/environments/int-dev-coreinfra.json
-	"	8	2
-	^	2	28
-	.	2	27
-	+	2	27
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/Berksfile
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/fix_stunnel/Berksfile
-	"	1	0
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/fix_stunnel/test/integration/default/default_test.rb
-	"	1	0
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/data_center/test/integration/default/default_test.rb
-	"	1	0
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/fix_stunnel/.kitchen.yml
-	"	27	2
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/test/fixtures/environments/int-dev-cert.json
-	"	10	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/files/squidGuard_whitelist/domains
-	"	1	0
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/tnwgd/libraries/helpers.rb
-	"	363	0
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/mds_adapter_bist/libraries/mds_deploy_bist_creds.rb
-	"	1	0
-
-> ~/dev-root/debesys_three/deploy/chef/cookbooks/options/recipes/default.rb
-	"	490	0
-
-> ~/dev-root/debesys_four/deploy/chef/cookbooks/jenkins_agent/recipes/default.rb
-	"	204	4
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/files/networkmanagement_whitelist/urls
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/files/networkmanagement_whitelist/domains
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/files/prometheus_alertmanager_whitelist/urls
-	"	1	0
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/files/prometheus_alertmanager_whitelist/domains
-	"	1	0
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/base/recipes/default.rb
-	"	46	12
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/tthaproxy/recipes/fixdropcopy.rb
-	"	24	25
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/squid_proxy/templates/default/squidGuard.conf.erb
-	"	57	36
-	^	53	43
-	.	53	42
-	+	31	18
-	+	32	14
-	+	33	23
-	+	35	27
-	+	36	35
-	+	37	36
-	+	49	20
-	+	50	26
-	+	51	35
-	+	32	26
-	+	53	42
-
-> ~/dev-root/debesys_two/deploy/chef/cookbooks/data_center/definitions/find_squidproxy_url.rb
-	"	150	4
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/simple_request.py
-	"	21	36
-	^	21	33
-	.	21	36
-	+	21	36
-
-> ~/dev-root/debesys_one/deploy/chef/cookbooks/data_center/definitions/find_primary_market.rb
-	"	238	0
-
-> ~/dev-root/debesys_four/.git/COMMIT_EDITMSG
-	"	1	22
-	^	1	23
-	.	1	22
-	+	1	22
-
-> ~/dev-root/debesys_four/deploy/chef/scripts/drchef.py
-	"	178	0
-	.	332	110
-	+	332	110
-
-> /var/log/debesys/drchef.log
-	"	1704	0
-
-> ~/dev-root/debesys_four/deploy/chef/scripts/debesys_server.py
-	"	421	0
-
-> ~/dev-root/debesys_two/.git/COMMIT_EDITMSG
-	"	1	43
-	^	1	44
-	.	1	43
-	+	1	43
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_019.results
-	"	7	123
-	^	9	243
-	.	7	123
-	+	1	143
-	+	3	152
-	+	5	205
-	+	7	131
-	+	9	243
-	+	7	123
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/generate.py
-	"	993	101
-	^	992	118
-	.	992	117
-	+	967	52
-	+	954	8
-	+	946	30
-	+	1011	0
-	+	990	0
-	+	970	79
-	+	971	120
-	+	976	79
-	+	977	56
-	+	978	106
-	+	1011	0
-	+	1011	0
-	+	1011	0
-	+	775	8
-	+	990	151
-	+	1011	37
-	+	966	16
-	+	967	66
-	+	970	75
-	+	977	19
-	+	990	97
-	+	990	0
-	+	990	133
-	+	1011	40
-	+	1011	82
-	+	1011	79
-	+	1011	76
-	+	1011	83
-	+	1011	30
-	+	1010	0
-	+	1009	40
-	+	1015	0
-	+	990	85
-	+	991	125
-	+	992	0
-	+	994	0
-	+	1007	52
-	+	1011	57
-	+	992	81
-	+	1006	47
-	+	1008	0
-	+	1013	52
-	+	1012	0
-	+	1015	0
-	+	995	8
-	+	1003	86
-	+	1004	0
-	+	1005	26
-	+	1011	0
-	+	1015	0
-	+	1015	121
-	+	1015	0
-	+	984	0
-	+	983	90
-	+	988	0
-	+	989	27
-	+	1015	0
-	+	1013	8
-	+	1015	0
-	+	962	0
-	+	1019	0
-	+	1124	0
-	+	1127	0
-	+	1124	37
-	+	954	0
-	+	984	123
-	+	969	31
-	+	1011	35
-	+	969	0
-	+	984	84
-	+	983	50
-	+	1008	40
-	+	1011	74
-	+	969	89
-	+	969	0
-	+	969	31
-	+	1331	0
-	+	1330	8
-	+	1331	0
-	+	1330	8
-	+	990	34
-	+	951	86
-	+	1011	90
-	+	969	0
-	+	1011	81
-	+	962	0
-	+	962	0
-	+	962	0
-	+	956	23
-	+	956	45
-	+	957	106
-	+	962	0
-	+	1014	46
-	+	1330	48
-	+	1011	0
-	+	1011	12
-	+	1011	71
-	+	1330	36
-	+	1011	0
-	+	992	117
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_019.json
-	"	32	29
-	^	26	52
-	.	26	53
-	+	13	0
-	+	12	5
-	+	13	11
-	+	23	39
-	+	33	35
-	+	5	74
-	+	13	14
-	+	15	19
-	+	26	53
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_018.json
-	"	30	4
-	^	28	26
-	.	28	25
-	+	15	10
-	+	21	62
-	+	28	25
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_017.json
-	"	28	25
-	^	28	26
-	.	28	25
-	+	17	49
-	+	21	52
-	+	22	7
-	+	23	3
-	+	27	16
-	+	28	21
-	+	10	23
-	+	5	72
-	+	8	7
-	+	28	25
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_016.json
-	"	19	32
-	^	18	33
-	.	18	32
-	+	5	69
-	+	10	27
-	+	11	36
-	+	12	0
-	+	11	39
-	+	16	22
-	+	17	34
-	+	18	0
-	+	19	36
-	+	20	0
-	+	19	39
-	+	18	32
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_015.json
-	"	27	32
-	^	26	33
-	.	26	32
-	+	14	16
-	+	20	0
-	+	19	5
-	+	20	17
-	+	20	4
-	+	20	0
-	+	8	0
-	+	13	5
-	+	8	16
-	+	12	28
-	+	14	17
-	+	19	4
-	+	20	0
-	+	25	0
-	+	5	91
-	+	24	24
-	+	12	0
-	+	25	56
-	+	26	32
-
-> ~/dev-root/debesys_one/deploy/chef/scripts/changecommands/tests/success/patch_014.json
-	"	26	32
-	^	26	33
-	.	26	32
-	+	5	89
-	+	11	36
-	+	12	33
-	+	24	26
-	+	27	36
-	+	28	33
-	+	20	0
-	+	14	16
-	+	16	18
-	+	20	0
-	+	5	109
-	+	25	56
-	+	26	32
