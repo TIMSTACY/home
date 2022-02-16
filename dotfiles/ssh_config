@@ -1,0 +1,67 @@
+Host 10.203.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+Host *.debesys.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+Host 10.210.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+Host 10.213.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+Host 10.215.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+Host *.trade.tt
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+
+
+Host 10.1*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+
+Host 10.20*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+
+Host 10.70*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  IdentityFile ~/.ssh/id_rsa
+  User tstacy
+  ConnectTimeout 5
+
+Host 10.195.2.65
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  ServerAliveInterval 300
+  ServerAliveCountMax 36
+  User tstacy
+  IdentityFile ~/.ssh/id_rsa
+  ConnectTimeout 5
