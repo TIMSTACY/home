@@ -249,3 +249,26 @@ dig +short myip.opendns.com @resolver1.opendns.com
 elpatch -e env -b 7.9 -s nodename
 
 
+##################################################################
+# ldapsearch 
+##################################################################
+ldapsearch -D "uid=ldapquery,ou=Service Accounts,ou=Users,ou=CHI,ou=US,dc=int,dc=tt,dc=local" -w "ldapsearch" -b "dc=int,dc=tt,dc=local" cn="aws-tpvjb-deploy"
+
+
+
+##################################################################
+# chgcmd notes
+##################################################################
+Set envvar export CHGCMD_CONTINUE_ON_SUCCESS=true or pass
+--continue-on-success to skip the prompt before each command.
+
+chgcmd will still print change information at the start of each change
+and prompt for approval. It will also prompt after all commands are
+complete unless CHGCMD_SET_COMPLETED is true.
+
+
+##################################################################
+# Check for fixed icinga2client registration
+##################################################################
+sudo /opt/virtualenv/icinga2/bin/pip freeze | grep tticinga2
+

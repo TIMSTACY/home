@@ -76,7 +76,7 @@ set visualbell                          " Flash the screen instead of making a s
 " set number                              " Show line numbers
 set tabstop=4 shiftwidth=4 expandtab    " All tabs are spaces
 " set autoindent                          " Keeps the indent when you hit return
-set laststatus=2                        " Show airline all the time
+" #set laststatus=2                        " Show airline all the time
 let mapleader = ","                     " Change leader key to ,
 set backspace=indent,eol,start          " Make sure backspace goes over lines
 set encoding=utf-8

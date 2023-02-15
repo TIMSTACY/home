@@ -73,6 +73,7 @@ export PROJECT=DEBESYS
 export BUMP_COOKBOOK_VERSION_AUTO_EXECUTE=1
 export BUMP_COOKBOOK_VERSION_NO_KNIFE_CHECK=1
 export NODES_REPO_ROOT=~/dev-root/nodes
+export USERDOCS_REPO_ROOT=~/dev-root/user-docs
 # export NODES_REPO_ROOT=~/dev-root/node_test_1
 export MY_ONE_OFF_VERSION=0.1818.1818
 # export MY_ONE_OFF_TAG="Testing deploy_one_off.py changes."
@@ -89,6 +90,8 @@ export DEVWS_SKIP_VALIDATE_REQUIREMENTS=1
 export USE_PYTHON3=1
 export PYTHONWARNINGS="ignore::DeprecationWarning"
 export CHGCMD_DESC_WIDTH=60
+#export KNIFE_SSH_UPGRADE_CHEF=16.10.8
+export KNIFE_SSH_COMMAND_SEVERITY=debug
 
 
 # ENABLE TO SKIP DCs in KNIFE_SSH.PY
@@ -123,6 +126,7 @@ alias vimvim='vim ~/.vimrc'
 alias envs='echo PATH $PATH'
 alias vnotes='vim ~/notes'
 alias cnotes='cat ~/notes'
+alias ccaptures='cat ~/capture_notes'
 alias ckitchentests='cat ~/kitchentests_notes'
 alias snotes='cat ~/splunk_notes'
 alias cchef14='cat ~/chef14_notes'
@@ -147,6 +151,7 @@ alias repohook='cp ~/githome/prepare-commit-msg .git/hooks/; chmod a+x .git/hook
 alias lx='ls |xclip -i'
 alias catsupersecret='cat ~/old_notes_tim'
 alias kj1='kill -9 %'
+alias santorini_support='cat ~/santorini_notes'
 
 
 
@@ -168,8 +173,9 @@ alias edgeproxy='cd ~/dev-root/EdgeProxy'
 alias tailtempvm='tail -f -n 20 /var/log/debesys/temp_vm.log'
 alias S3='aws s3 ls s3://deploy-debesys'
 alias mdbd='sudo mount -o user=intad/tstacy -t cifs //chifs01.int.tt.local/Share/Dead_By_Dawn /mnt/dbd/'
-alias mjump='sudo mount.cifs -o user=tstacy //172.17.250.29/Share /mnt/CHIJCHFS01'
-alias umjump='sudo mount /mnt/CHIJCHFS01'
+#alias mjump='sudo mount.cifs -o user=tstacy //172.17.250.29/Share /mnt/CHIJCHFS01'
+alias mjump='sudo mount.cifs -o vers=2.1,user=tstacy //CHIJCHFS01/Share /mnt/CHIJCHFS01'
+alias umjump='sudo umount /mnt/CHIJCHFS01'
 alias glog='git glog'
 alias tkw='tmux kill-window'
 alias tkp='tmux kill-pane'
@@ -213,6 +219,7 @@ alias changecommands='/opt/virtualenv/changecommands/bin/python3'
 alias changecommands_test='/opt/virtualenv/changecommands_test/bin/python3'
 alias python3='/opt/python/python_3.6.5/bin/python3.6'
 alias upgrade_chgcmd='pipx upgrade chgcmd -i https://pypi-dev.debesys.net/simple/'
+alias upgrade_t3='/opt/virtualenv/triage/bin/pip install --upgrade -i https://pypi-dev.debesys.net/pypi tt-triage'
 
 # Shared bash functions
 if [ -f $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/bashrc/chef.bash ]; then
@@ -935,6 +942,21 @@ function ermchefnode()
 }
 
 
+function trmchefnode()
+{
+    if [ -z "$1" ]; then
+        echo Usage: You must pass the node name.
+        return
+    fi
+
+    echo "knife node delete --yes $1"
+    knife node delete --yes "$1" --config ~/.chef/knife.ttsdk.rb
+
+    echo "knife client delete --yes $1"
+    knife client delete --yes "$1" --config ~/.chef/knife.ttsdk.rb
+}
+
+
 # safely remove a git branch
 function rmbr()
 {
@@ -1085,7 +1107,7 @@ function resetilo()
 
 
 function awsauth() {
-    $(/opt/virtualenv/devws/bin/python2 $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
+    $(/opt/virtualenv/devws3/bin/python $DEPLOYMENT_SCRIPTS_REPO_ROOT/deploy/chef/scripts/aws_authenticator.py --env --role dev --account $@)
     AWS_ACCOUNT_INFO="(aws:$AWS_ACCOUNT)"
     export AWS_ACCOUNT_INFO
 }
